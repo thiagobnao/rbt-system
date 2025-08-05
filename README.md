@@ -130,3 +130,14 @@ Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para 
 
 *Gerado por Manus AI em 5 de agosto de 2025.*
 
+
+
+## 📖 Documentação Técnica
+
+Para uma compreensão aprofundada da arquitetura, tecnologias, estrutura de código e diretrizes de desenvolvimento do Sistema ROBERTA, consulte o manual técnico detalhado:
+
+-   [**Manual Técnico do Sistema ROBERTA**](technical_manual.md)
+
+Este manual é essencial para agentes da Vibe Code que atuarão no projeto, fornecendo informações cruciais para nivelar e atualizar o conhecimento técnico.
+
+
