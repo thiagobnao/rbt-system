@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { NextRequest } from 'next/server'
 
 export type AuthRole = 'admin' | 'coordinator' | 'common'
 
@@ -33,10 +34,10 @@ export function getAuthUserFromRequest(req: Request): { ok: true; user: AuthUser
   }
 }
 
-export function withAuth<T extends (req: Request, user: AuthUser) => Promise<Response> | Response>(
+export function withAuth<T extends (req: NextRequest, user: AuthUser, context?: any) => Promise<Response> | Response>(
   handler: T
-): (req: Request) => Promise<Response> {
-  return async (req: Request) => {
+): (req: NextRequest, context?: any) => Promise<Response> {
+  return async (req: NextRequest, context?: any) => {
     const result = getAuthUserFromRequest(req)
     if (!result.ok) {
       return new Response(JSON.stringify({ message: result.message }), {
@@ -44,7 +45,7 @@ export function withAuth<T extends (req: Request, user: AuthUser) => Promise<Res
         headers: { 'Content-Type': 'application/json' }
       })
     }
-    return handler(req, result.user)
+    return handler(req, result.user, context)
   }
 }
 

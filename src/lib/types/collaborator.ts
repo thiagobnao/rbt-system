@@ -36,6 +36,9 @@ export interface Collaborator {
   updated_by?: string;
 }
 
+// Brazilian states type
+export type BrazilianState = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
+
 export interface CreateCollaboratorRequest {
   name: string;
   cpf: string;
@@ -50,7 +53,7 @@ export interface CreateCollaboratorRequest {
   address_complement?: string;
   address_neighborhood?: string;
   address_city?: string;
-  address_state?: string;
+  address_state?: BrazilianState;
   address_zip_code?: string;
   bank_name?: string;
   bank_agency?: string;
@@ -69,7 +72,7 @@ export interface CollaboratorFilters {
   search?: string;
   status?: 'active' | 'inactive' | 'suspended';
   city?: string;
-  state?: string;
+  state?: BrazilianState;
   page?: number;
   limit?: number;
 }

@@ -52,6 +52,7 @@ export function formatCEP(cep: string): string {
 
 /**
  * Format date to Brazilian format (DD/MM/YYYY)
+ * Uses manual formatting to avoid hydration issues
  */
 export function formatDate(date: string | Date): string {
   if (!date) return '';
@@ -60,11 +61,17 @@ export function formatDate(date: string | Date): string {
   
   if (isNaN(dateObj.getTime())) return '';
   
-  return dateObj.toLocaleDateString('pt-BR');
+  // Manual formatting to avoid hydration issues
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const year = dateObj.getFullYear();
+  
+  return `${day}/${month}/${year}`;
 }
 
 /**
  * Format date and time to Brazilian format (DD/MM/YYYY HH:mm)
+ * Uses manual formatting to avoid hydration issues
  */
 export function formatDateTime(date: string | Date): string {
   if (!date) return '';
@@ -73,13 +80,14 @@ export function formatDateTime(date: string | Date): string {
   
   if (isNaN(dateObj.getTime())) return '';
   
-  return dateObj.toLocaleString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  // Manual formatting to avoid hydration issues
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = dateObj.getHours().toString().padStart(2, '0');
+  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+  
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
 /**

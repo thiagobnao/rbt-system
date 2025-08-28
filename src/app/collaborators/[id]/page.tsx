@@ -5,18 +5,16 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Edit, User, Phone, MapPin, CreditCard, Calendar, FileText } from 'lucide-react';
+import { ArrowLeft, Edit, User, Phone, MapPin, CreditCard } from 'lucide-react';
 import { Collaborator } from '@/lib/types/collaborator';
 import { collaboratorService } from '@/lib/services/collaboratorService';
-import { formatCPF, formatPhone, formatCEP, formatDate } from '@/lib/utils/formatters';
+import { formatCPF, formatPhone, formatDate } from '@/lib/utils/formatters';
 import { toast } from 'sonner';
-import { Label } from '@/components/ui/label';
 
 interface CollaboratorDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function CollaboratorDetailPage({ params }: CollaboratorDetailPageProps) {
@@ -25,22 +23,22 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadCollaborator();
-  }, [params.id]);
+    const loadCollaborator = async () => {
+      try {
+        const { id } = await params;
+        const data = await collaboratorService.getCollaborator(id);
+        setCollaborator(data);
+      } catch (error) {
+        console.error('Error loading collaborator:', error);
+        toast.error('Erro ao carregar dados do colaborador');
+        router.push('/collaborators');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const loadCollaborator = async () => {
-    try {
-      setLoading(true);
-      const data = await collaboratorService.getCollaborator(params.id);
-      setCollaborator(data);
-    } catch (error) {
-      console.error('Error loading collaborator:', error);
-      toast.error('Erro ao carregar dados do colaborador');
-      router.push('/collaborators');
-    } finally {
-      setLoading(false);
-    }
-  };
+    loadCollaborator();
+  }, [params, router]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -61,8 +59,8 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="space-y-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-48 bg-gray-200 rounded"></div>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-64 bg-gray-200 rounded"></div>
             ))}
           </div>
         </div>
@@ -75,12 +73,7 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
       <div className="container mx-auto py-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Colaborador não encontrado</h1>
-          <p className="text-muted-foreground mt-2">
-            O colaborador que você está procurando não existe ou foi removido.
-          </p>
-          <Button onClick={() => router.push('/collaborators')} className="mt-4">
-            Voltar para a lista
-          </Button>
+          <p className="text-muted-foreground">O colaborador solicitado não foi encontrado.</p>
         </div>
       </div>
     );
@@ -89,31 +82,23 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
   return (
     <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push('/collaborators')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">{collaborator.name}</h1>
-            <p className="text-muted-foreground">
-              Detalhes do colaborador
-            </p>
-          </div>
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => router.push('/collaborators')}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Voltar
+        </Button>
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold tracking-tight">{collaborator.name}</h1>
+          <p className="text-muted-foreground">Detalhes do colaborador</p>
         </div>
-        
-        <div className="flex gap-2">
-          {getStatusBadge(collaborator.status)}
-          <Button onClick={() => router.push(`/collaborators/${params.id}/edit`)}>
-            <Edit className="h-4 w-4 mr-2" />
-            Editar
-          </Button>
-        </div>
+        <Button onClick={() => router.push(`/collaborators/${collaborator.id}/edit`)}>
+          <Edit className="h-4 w-4 mr-2" />
+          Editar
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -126,37 +111,35 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Nome Completo</label>
+              <p className="text-lg">{collaborator.name}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">CPF</label>
+              <p className="font-mono">{formatCPF(collaborator.cpf)}</p>
+            </div>
+            {collaborator.birth_date && (
               <div>
-                <Label className="text-sm font-medium text-muted-foreground">Nome Completo</Label>
-                <p className="text-lg font-medium">{collaborator.name}</p>
+                <label className="text-sm font-medium text-muted-foreground">Data de Nascimento</label>
+                <p>{formatDate(collaborator.birth_date)}</p>
               </div>
-              
+            )}
+            {collaborator.rg && (
               <div>
-                <Label className="text-sm font-medium text-muted-foreground">CPF</Label>
-                <p className="font-mono">{formatCPF(collaborator.cpf)}</p>
+                <label className="text-sm font-medium text-muted-foreground">RG</label>
+                <p>{collaborator.rg}</p>
               </div>
-              
-              {collaborator.birth_date && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Data de Nascimento</Label>
-                  <p>{formatDate(collaborator.birth_date)}</p>
-                </div>
-              )}
-              
-              {collaborator.rg && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">RG</Label>
-                  <p>{collaborator.rg}</p>
-                </div>
-              )}
-              
-              {collaborator.rg_issuer && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Órgão Emissor</Label>
-                  <p>{collaborator.rg_issuer}</p>
-                </div>
-              )}
+            )}
+            {collaborator.rg_issuer && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Órgão Emissor</label>
+                <p>{collaborator.rg_issuer}</p>
+              </div>
+            )}
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Status</label>
+              <div className="mt-1">{getStatusBadge(collaborator.status)}</div>
             </div>
           </CardContent>
         </Card>
@@ -170,28 +153,24 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              {collaborator.email && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">E-mail</Label>
-                  <p>{collaborator.email}</p>
-                </div>
-              )}
-              
-              {collaborator.phone && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Telefone</Label>
-                  <p>{formatPhone(collaborator.phone)}</p>
-                </div>
-              )}
-              
-              {collaborator.mobile_phone && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Celular</Label>
-                  <p>{formatPhone(collaborator.mobile_phone)}</p>
-                </div>
-              )}
-            </div>
+            {collaborator.email && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">E-mail</label>
+                <p>{collaborator.email}</p>
+              </div>
+            )}
+            {collaborator.phone && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Telefone</label>
+                <p>{formatPhone(collaborator.phone)}</p>
+              </div>
+            )}
+            {collaborator.mobile_phone && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Celular</label>
+                <p>{formatPhone(collaborator.mobile_phone)}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -204,56 +183,48 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              {collaborator.address_street && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Rua</Label>
-                  <p>{collaborator.address_street}</p>
-                </div>
-              )}
-              
-              {collaborator.address_number && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Número</Label>
-                  <p>{collaborator.address_number}</p>
-                </div>
-              )}
-              
-              {collaborator.address_complement && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Complemento</Label>
-                  <p>{collaborator.address_complement}</p>
-                </div>
-              )}
-              
-              {collaborator.address_neighborhood && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Bairro</Label>
-                  <p>{collaborator.address_neighborhood}</p>
-                </div>
-              )}
-              
-              {collaborator.address_city && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Cidade</Label>
-                  <p>{collaborator.address_city}</p>
-                </div>
-              )}
-              
-              {collaborator.address_state && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Estado</Label>
-                  <p>{collaborator.address_state}</p>
-                </div>
-              )}
-              
-              {collaborator.address_zip_code && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">CEP</Label>
-                  <p>{formatCEP(collaborator.address_zip_code)}</p>
-                </div>
-              )}
-            </div>
+            {collaborator.address_street && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Rua</label>
+                <p>{collaborator.address_street}</p>
+              </div>
+            )}
+            {collaborator.address_number && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Número</label>
+                <p>{collaborator.address_number}</p>
+              </div>
+            )}
+            {collaborator.address_complement && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Complemento</label>
+                <p>{collaborator.address_complement}</p>
+              </div>
+            )}
+            {collaborator.address_neighborhood && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Bairro</label>
+                <p>{collaborator.address_neighborhood}</p>
+              </div>
+            )}
+            {collaborator.address_city && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Cidade</label>
+                <p>{collaborator.address_city}</p>
+              </div>
+            )}
+            {collaborator.address_state && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Estado</label>
+                <p>{collaborator.address_state}</p>
+              </div>
+            )}
+            {collaborator.address_zip_code && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">CEP</label>
+                <p>{collaborator.address_zip_code}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -266,82 +237,45 @@ export default function CollaboratorDetailPage({ params }: CollaboratorDetailPag
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              {collaborator.bank_name && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Nome do Banco</Label>
-                  <p>{collaborator.bank_name}</p>
-                </div>
-              )}
-              
-              {collaborator.bank_agency && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Agência</Label>
-                  <p>{collaborator.bank_agency}</p>
-                </div>
-              )}
-              
-              {collaborator.bank_account && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Conta</Label>
-                  <p>{collaborator.bank_account}</p>
-                </div>
-              )}
-              
-              {collaborator.bank_account_type && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Tipo de Conta</Label>
-                  <p className="capitalize">{collaborator.bank_account_type}</p>
-                </div>
-              )}
-              
-              {collaborator.pix_key && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Chave PIX</Label>
-                  <p>{collaborator.pix_key}</p>
-                </div>
-              )}
-              
-              {collaborator.pix_key_type && (
-                <div>
-                  <Label className="text-sm font-medium text-muted-foreground">Tipo da Chave PIX</Label>
-                  <p className="capitalize">{collaborator.pix_key_type}</p>
-                </div>
-              )}
-            </div>
+            {collaborator.bank_name && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Nome do Banco</label>
+                <p>{collaborator.bank_name}</p>
+              </div>
+            )}
+            {collaborator.bank_agency && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Agência</label>
+                <p>{collaborator.bank_agency}</p>
+              </div>
+            )}
+            {collaborator.bank_account && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Conta</label>
+                <p>{collaborator.bank_account}</p>
+              </div>
+            )}
+            {collaborator.bank_account_type && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Tipo de Conta</label>
+                <p className="capitalize">{collaborator.bank_account_type}</p>
+              </div>
+            )}
+            {collaborator.pix_key && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Chave PIX</label>
+                <p>{collaborator.pix_key}</p>
+              </div>
+            )}
+            {collaborator.pix_key_type && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Tipo da Chave PIX</label>
+                <p className="capitalize">{collaborator.pix_key_type}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
-
-      {/* System Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Informações do Sistema
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label className="text-sm font-medium text-muted-foreground">Data de Criação</Label>
-              <p>{formatDate(collaborator.created_at)}</p>
-            </div>
-            
-            <div>
-              <Label className="text-sm font-medium text-muted-foreground">Última Atualização</Label>
-              <p>{formatDate(collaborator.updated_at)}</p>
-            </div>
-            
-            <div>
-              <Label className="text-sm font-medium text-muted-foreground">Status</Label>
-              <div className="mt-1">
-                {getStatusBadge(collaborator.status)}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

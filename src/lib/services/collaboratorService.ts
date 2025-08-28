@@ -1,18 +1,18 @@
-import { 
-  Collaborator, 
-  CreateCollaboratorRequest, 
-  UpdateCollaboratorRequest, 
-  CollaboratorFiltersInput,
-  CollaboratorListResponse 
+import {
+  Collaborator,
+  CreateCollaboratorRequest,
+  UpdateCollaboratorRequest,
+  CollaboratorFilters,
+  CollaboratorListResponse
 } from '@/lib/types/collaborator';
 
 export class CollaboratorService {
   private baseUrl = '/api/collaborators';
 
   // Get all collaborators with filters and pagination
-  async getCollaborators(filters: CollaboratorFiltersInput = {}): Promise<CollaboratorListResponse> {
+  async getCollaborators(filters: CollaboratorFilters = {}): Promise<CollaboratorListResponse> {
     const params = new URLSearchParams();
-    
+
     if (filters.search) params.append('search', filters.search);
     if (filters.status) params.append('status', filters.status);
     if (filters.city) params.append('city', filters.city);
@@ -127,9 +127,9 @@ export class CollaboratorService {
     const data = await response.json();
     const cities = data.collaborators
       .map((c: Collaborator) => c.address_city)
-      .filter(Boolean);
+      .filter((city: any): city is string => typeof city === 'string' && city.length > 0);
     
-    return [...new Set(cities)].sort();
+    return Array.from(new Set(cities as string[])).sort();
   }
 
   // Get states for filtering
@@ -149,9 +149,9 @@ export class CollaboratorService {
     const data = await response.json();
     const states = data.collaborators
       .map((c: Collaborator) => c.address_state)
-      .filter(Boolean);
+      .filter((state: any): state is string => typeof state === 'string' && state.length > 0);
     
-    return [...new Set(states)].sort();
+    return Array.from(new Set(states as string[])).sort();
   }
 
   // Helper method to get auth token from localStorage or cookies

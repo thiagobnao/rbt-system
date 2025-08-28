@@ -9,36 +9,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Save, User, Phone, MapPin, CreditCard } from 'lucide-react';
-import { Collaborator, CreateCollaboratorRequest, UpdateCollaboratorRequest } from '@/lib/types/collaborator';
-import { createCollaboratorSchema, updateCollaboratorSchema } from '@/lib/validations/collaborator';
+import { CreateCollaboratorRequest } from '@/lib/types/collaborator';
+import { createCollaboratorSchema } from '@/lib/validations/collaborator';
 import { collaboratorService } from '@/lib/services/collaboratorService';
+import { formatCPF, formatPhone, formatCEP } from '@/lib/utils/formatters';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 interface CollaboratorFormProps {
   mode: 'create' | 'edit';
   collaboratorId?: string;
-  onSuccess?: () => void;
 }
 
-export function CollaboratorForm({ mode, collaboratorId, onSuccess }: CollaboratorFormProps) {
+export function CollaboratorForm({ mode, collaboratorId }: CollaboratorFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(mode === 'edit');
 
-  // Form setup with Zod validation
-  const schema = mode === 'create' ? createCollaboratorSchema : updateCollaboratorSchema;
   const form = useForm<CreateCollaboratorRequest>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createCollaboratorSchema),
     defaultValues: {
       name: '',
       cpf: '',
+      email: '',
       birth_date: '',
       rg: '',
       rg_issuer: '',
-      email: '',
       phone: '',
       mobile_phone: '',
       address_street: '',
@@ -46,71 +43,46 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
       address_complement: '',
       address_neighborhood: '',
       address_city: '',
-      address_state: '',
+      address_state: undefined,
       address_zip_code: '',
       bank_name: '',
       bank_agency: '',
       bank_account: '',
-      bank_account_type: 'corrente',
+      bank_account_type: undefined,
       pix_key: '',
-      pix_key_type: 'cpf',
+      pix_key_type: undefined,
     },
   });
 
-  const brazilianStates = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
-    'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
-    'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-  ];
+  const { formState: { errors }, handleSubmit, setValue, watch } = form;
 
   // Load collaborator data for edit mode
   useEffect(() => {
     if (mode === 'edit' && collaboratorId) {
+      const loadCollaborator = async () => {
+        try {
+          const collaborator = await collaboratorService.getCollaborator(collaboratorId);
+          
+          // Set form values
+          Object.entries(collaborator).forEach(([key, value]) => {
+            if (key !== 'id' && key !== 'created_at' && key !== 'updated_at' && key !== 'created_by' && key !== 'updated_by') {
+              setValue(key as any, value || '');
+            }
+          });
+        } catch (error) {
+          console.error('Error loading collaborator:', error);
+          toast.error('Erro ao carregar dados do colaborador');
+          router.push('/collaborators');
+        } finally {
+          setInitialLoading(false);
+        }
+      };
+
       loadCollaborator();
-    }
-  }, [mode, collaboratorId]);
-
-  const loadCollaborator = async () => {
-    try {
-      setInitialLoading(true);
-      const collaborator = await collaboratorService.getCollaborator(collaboratorId!);
-      
-      // Convert date format for input field
-      const birthDate = collaborator.birth_date 
-        ? new Date(collaborator.birth_date).toISOString().split('T')[0]
-        : '';
-
-      form.reset({
-        name: collaborator.name || '',
-        cpf: collaborator.cpf || '',
-        birth_date: birthDate,
-        rg: collaborator.rg || '',
-        rg_issuer: collaborator.rg_issuer || '',
-        email: collaborator.email || '',
-        phone: collaborator.phone || '',
-        mobile_phone: collaborator.mobile_phone || '',
-        address_street: collaborator.address_street || '',
-        address_number: collaborator.address_number || '',
-        address_complement: collaborator.address_complement || '',
-        address_neighborhood: collaborator.address_neighborhood || '',
-        address_city: collaborator.address_city || '',
-        address_state: collaborator.address_state || '',
-        address_zip_code: collaborator.address_zip_code || '',
-        bank_name: collaborator.bank_name || '',
-        bank_agency: collaborator.bank_agency || '',
-        bank_account: collaborator.bank_account || '',
-        bank_account_type: collaborator.bank_account_type || 'corrente',
-        pix_key: collaborator.pix_key || '',
-        pix_key_type: collaborator.pix_key_type || 'cpf',
-      });
-    } catch (error) {
-      console.error('Error loading collaborator:', error);
-      toast.error('Erro ao carregar dados do colaborador');
-      router.push('/collaborators');
-    } finally {
+    } else {
       setInitialLoading(false);
     }
-  };
+  }, [mode, collaboratorId, setValue, router]);
 
   const onSubmit = async (data: CreateCollaboratorRequest) => {
     try {
@@ -120,35 +92,45 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
         await collaboratorService.createCollaborator(data);
         toast.success('Colaborador criado com sucesso!');
       } else {
-        const updateData: UpdateCollaboratorRequest = {
-          id: collaboratorId!,
-          ...data,
-        };
-        await collaboratorService.updateCollaborator(collaboratorId!, updateData);
+        await collaboratorService.updateCollaborator(collaboratorId!, { id: collaboratorId!, ...data });
         toast.success('Colaborador atualizado com sucesso!');
       }
       
-      onSuccess?.();
       router.push('/collaborators');
     } catch (error: any) {
       console.error('Error saving collaborator:', error);
       
-      // Handle validation errors from API
+      // Handle validation errors from server
       if (error.response?.data?.errors) {
-        const apiErrors = error.response.data.errors;
-        Object.keys(apiErrors).forEach((field) => {
-          form.setError(field as keyof CreateCollaboratorRequest, {
-            type: 'server',
-            message: apiErrors[field],
-          });
+        error.response.data.errors.forEach((err: any) => {
+          if (err.field) {
+            form.setError(err.field as any, { message: err.message });
+          }
         });
-        toast.error('Por favor, corrija os erros no formulário');
       } else {
-        toast.error(mode === 'create' ? 'Erro ao criar colaborador' : 'Erro ao atualizar colaborador');
+        toast.error(error.response?.data?.message || 'Erro ao salvar colaborador');
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCPFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const formatted = formatCPF(value);
+    setValue('cpf', formatted);
+  };
+
+  const handlePhoneChange = (field: 'phone' | 'mobile_phone') => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const formatted = formatPhone(value);
+    setValue(field, formatted);
+  };
+
+  const handleCEPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const formatted = formatCEP(value);
+    setValue('address_zip_code', formatted);
   };
 
   if (initialLoading) {
@@ -183,15 +165,12 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
             {mode === 'create' ? 'Novo Colaborador' : 'Editar Colaborador'}
           </h1>
           <p className="text-muted-foreground">
-            {mode === 'create' 
-              ? 'Preencha os dados para criar um novo colaborador'
-              : 'Atualize os dados do colaborador'
-            }
+            {mode === 'create' ? 'Cadastre um novo colaborador' : 'Atualize os dados do colaborador'}
           </p>
         </div>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Personal Information */}
         <Card>
           <CardHeader>
@@ -207,73 +186,56 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
                 <Input
                   id="name"
                   {...form.register('name')}
-                  placeholder="Digite o nome completo"
-                  className={cn(
-                    form.formState.errors.name && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.name && 'border-red-500')}
                 />
-                {form.formState.errors.name && (
-                  <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="cpf">CPF *</Label>
                 <Input
                   id="cpf"
                   {...form.register('cpf')}
-                  placeholder="000.000.000-00"
-                  className={cn(
-                    form.formState.errors.cpf && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  onChange={handleCPFChange}
+                  className={cn(errors.cpf && 'border-red-500')}
                 />
-                {form.formState.errors.cpf && (
-                  <p className="text-sm text-red-500">{form.formState.errors.cpf.message}</p>
+                {errors.cpf && (
+                  <p className="text-sm text-red-500">{errors.cpf.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="birth_date">Data de Nascimento</Label>
                 <Input
                   id="birth_date"
                   type="date"
                   {...form.register('birth_date')}
-                  className={cn(
-                    form.formState.errors.birth_date && "border-red-500 focus-visible:ring-red-500"
-                  )}
                 />
-                {form.formState.errors.birth_date && (
-                  <p className="text-sm text-red-500">{form.formState.errors.birth_date.message}</p>
-                )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="rg">RG</Label>
                 <Input
                   id="rg"
                   {...form.register('rg')}
-                  placeholder="00.000.000-0"
-                  className={cn(
-                    form.formState.errors.rg && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.rg && 'border-red-500')}
                 />
-                {form.formState.errors.rg && (
-                  <p className="text-sm text-red-500">{form.formState.errors.rg.message}</p>
+                {errors.rg && (
+                  <p className="text-sm text-red-500">{errors.rg.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="rg_issuer">Órgão Emissor</Label>
                 <Input
                   id="rg_issuer"
                   {...form.register('rg_issuer')}
-                  placeholder="SSP/SP"
-                  className={cn(
-                    form.formState.errors.rg_issuer && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.rg_issuer && 'border-red-500')}
                 />
-                {form.formState.errors.rg_issuer && (
-                  <p className="text-sm text-red-500">{form.formState.errors.rg_issuer.message}</p>
+                {errors.rg_issuer && (
+                  <p className="text-sm text-red-500">{errors.rg_issuer.message}</p>
                 )}
               </div>
             </div>
@@ -296,43 +258,36 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
                   id="email"
                   type="email"
                   {...form.register('email')}
-                  placeholder="email@exemplo.com"
-                  className={cn(
-                    form.formState.errors.email && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.email && 'border-red-500')}
                 />
-                {form.formState.errors.email && (
-                  <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefone</Label>
                 <Input
                   id="phone"
                   {...form.register('phone')}
-                  placeholder="(11) 0000-0000"
-                  className={cn(
-                    form.formState.errors.phone && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  onChange={handlePhoneChange('phone')}
+                  className={cn(errors.phone && 'border-red-500')}
                 />
-                {form.formState.errors.phone && (
-                  <p className="text-sm text-red-500">{form.formState.errors.phone.message}</p>
+                {errors.phone && (
+                  <p className="text-sm text-red-500">{errors.phone.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="mobile_phone">Celular</Label>
                 <Input
                   id="mobile_phone"
                   {...form.register('mobile_phone')}
-                  placeholder="(11) 00000-0000"
-                  className={cn(
-                    form.formState.errors.mobile_phone && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  onChange={handlePhoneChange('mobile_phone')}
+                  className={cn(errors.mobile_phone && 'border-red-500')}
                 />
-                {form.formState.errors.mobile_phone && (
-                  <p className="text-sm text-red-500">{form.formState.errors.mobile_phone.message}</p>
+                {errors.mobile_phone && (
+                  <p className="text-sm text-red-500">{errors.mobile_phone.message}</p>
                 )}
               </div>
             </div>
@@ -354,112 +309,116 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
                 <Input
                   id="address_street"
                   {...form.register('address_street')}
-                  placeholder="Nome da rua"
-                  className={cn(
-                    form.formState.errors.address_street && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.address_street && 'border-red-500')}
                 />
-                {form.formState.errors.address_street && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_street.message}</p>
+                {errors.address_street && (
+                  <p className="text-sm text-red-500">{errors.address_street.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_number">Número</Label>
                 <Input
                   id="address_number"
                   {...form.register('address_number')}
-                  placeholder="123"
-                  className={cn(
-                    form.formState.errors.address_number && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.address_number && 'border-red-500')}
                 />
-                {form.formState.errors.address_number && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_number.message}</p>
+                {errors.address_number && (
+                  <p className="text-sm text-red-500">{errors.address_number.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_complement">Complemento</Label>
                 <Input
                   id="address_complement"
                   {...form.register('address_complement')}
-                  placeholder="Apto 101"
-                  className={cn(
-                    form.formState.errors.address_complement && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.address_complement && 'border-red-500')}
                 />
-                {form.formState.errors.address_complement && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_complement.message}</p>
+                {errors.address_complement && (
+                  <p className="text-sm text-red-500">{errors.address_complement.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_neighborhood">Bairro</Label>
                 <Input
                   id="address_neighborhood"
                   {...form.register('address_neighborhood')}
-                  placeholder="Nome do bairro"
-                  className={cn(
-                    form.formState.errors.address_neighborhood && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.address_neighborhood && 'border-red-500')}
                 />
-                {form.formState.errors.address_neighborhood && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_neighborhood.message}</p>
+                {errors.address_neighborhood && (
+                  <p className="text-sm text-red-500">{errors.address_neighborhood.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_city">Cidade</Label>
                 <Input
                   id="address_city"
                   {...form.register('address_city')}
-                  placeholder="Nome da cidade"
-                  className={cn(
-                    form.formState.errors.address_city && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.address_city && 'border-red-500')}
                 />
-                {form.formState.errors.address_city && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_city.message}</p>
+                {errors.address_city && (
+                  <p className="text-sm text-red-500">{errors.address_city.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_state">Estado</Label>
                 <Select
-                  value={form.watch('address_state')}
-                  onValueChange={(value) => form.setValue('address_state', value)}
+                  value={watch('address_state') || ''}
+                  onValueChange={(value) => setValue('address_state', value as any)}
                 >
-                  <SelectTrigger className={cn(
-                    form.formState.errors.address_state && "border-red-500 focus-visible:ring-red-500"
-                  )}>
+                  <SelectTrigger className={cn(errors.address_state && 'border-red-500')}>
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
                   <SelectContent>
-                    {brazilianStates.map((state) => (
-                      <SelectItem key={state} value={state}>
-                        {state}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="">Selecione</SelectItem>
+                    <SelectItem value="AC">Acre</SelectItem>
+                    <SelectItem value="AL">Alagoas</SelectItem>
+                    <SelectItem value="AP">Amapá</SelectItem>
+                    <SelectItem value="AM">Amazonas</SelectItem>
+                    <SelectItem value="BA">Bahia</SelectItem>
+                    <SelectItem value="CE">Ceará</SelectItem>
+                    <SelectItem value="DF">Distrito Federal</SelectItem>
+                    <SelectItem value="ES">Espírito Santo</SelectItem>
+                    <SelectItem value="GO">Goiás</SelectItem>
+                    <SelectItem value="MA">Maranhão</SelectItem>
+                    <SelectItem value="MT">Mato Grosso</SelectItem>
+                    <SelectItem value="MS">Mato Grosso do Sul</SelectItem>
+                    <SelectItem value="MG">Minas Gerais</SelectItem>
+                    <SelectItem value="PA">Pará</SelectItem>
+                    <SelectItem value="PB">Paraíba</SelectItem>
+                    <SelectItem value="PR">Paraná</SelectItem>
+                    <SelectItem value="PE">Pernambuco</SelectItem>
+                    <SelectItem value="PI">Piauí</SelectItem>
+                    <SelectItem value="RJ">Rio de Janeiro</SelectItem>
+                    <SelectItem value="RN">Rio Grande do Norte</SelectItem>
+                    <SelectItem value="RS">Rio Grande do Sul</SelectItem>
+                    <SelectItem value="RO">Rondônia</SelectItem>
+                    <SelectItem value="RR">Roraima</SelectItem>
+                    <SelectItem value="SC">Santa Catarina</SelectItem>
+                    <SelectItem value="SP">São Paulo</SelectItem>
+                    <SelectItem value="SE">Sergipe</SelectItem>
+                    <SelectItem value="TO">Tocantins</SelectItem>
                   </SelectContent>
                 </Select>
-                {form.formState.errors.address_state && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_state.message}</p>
+                {errors.address_state && (
+                  <p className="text-sm text-red-500">{errors.address_state.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="address_zip_code">CEP</Label>
                 <Input
                   id="address_zip_code"
                   {...form.register('address_zip_code')}
-                  placeholder="00000-000"
-                  className={cn(
-                    form.formState.errors.address_zip_code && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  onChange={handleCEPChange}
+                  className={cn(errors.address_zip_code && 'border-red-500')}
                 />
-                {form.formState.errors.address_zip_code && (
-                  <p className="text-sm text-red-500">{form.formState.errors.address_zip_code.message}</p>
+                {errors.address_zip_code && (
+                  <p className="text-sm text-red-500">{errors.address_zip_code.message}</p>
                 )}
               </div>
             </div>
@@ -481,102 +440,88 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
                 <Input
                   id="bank_name"
                   {...form.register('bank_name')}
-                  placeholder="Nome do banco"
-                  className={cn(
-                    form.formState.errors.bank_name && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.bank_name && 'border-red-500')}
                 />
-                {form.formState.errors.bank_name && (
-                  <p className="text-sm text-red-500">{form.formState.errors.bank_name.message}</p>
+                {errors.bank_name && (
+                  <p className="text-sm text-red-500">{errors.bank_name.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="bank_agency">Agência</Label>
                 <Input
                   id="bank_agency"
                   {...form.register('bank_agency')}
-                  placeholder="0000"
-                  className={cn(
-                    form.formState.errors.bank_agency && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.bank_agency && 'border-red-500')}
                 />
-                {form.formState.errors.bank_agency && (
-                  <p className="text-sm text-red-500">{form.formState.errors.bank_agency.message}</p>
+                {errors.bank_agency && (
+                  <p className="text-sm text-red-500">{errors.bank_agency.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="bank_account">Conta</Label>
                 <Input
                   id="bank_account"
                   {...form.register('bank_account')}
-                  placeholder="00000-0"
-                  className={cn(
-                    form.formState.errors.bank_account && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.bank_account && 'border-red-500')}
                 />
-                {form.formState.errors.bank_account && (
-                  <p className="text-sm text-red-500">{form.formState.errors.bank_account.message}</p>
+                {errors.bank_account && (
+                  <p className="text-sm text-red-500">{errors.bank_account.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="bank_account_type">Tipo de Conta</Label>
                 <Select
-                  value={form.watch('bank_account_type')}
-                  onValueChange={(value) => form.setValue('bank_account_type', value as 'corrente' | 'poupanca')}
+                  value={watch('bank_account_type') || ''}
+                  onValueChange={(value) => setValue('bank_account_type', value as any)}
                 >
-                  <SelectTrigger className={cn(
-                    form.formState.errors.bank_account_type && "border-red-500 focus-visible:ring-red-500"
-                  )}>
-                    <SelectValue />
+                  <SelectTrigger className={cn(errors.bank_account_type && 'border-red-500')}>
+                    <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="">Selecione</SelectItem>
                     <SelectItem value="corrente">Corrente</SelectItem>
                     <SelectItem value="poupanca">Poupança</SelectItem>
                   </SelectContent>
                 </Select>
-                {form.formState.errors.bank_account_type && (
-                  <p className="text-sm text-red-500">{form.formState.errors.bank_account_type.message}</p>
+                {errors.bank_account_type && (
+                  <p className="text-sm text-red-500">{errors.bank_account_type.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="pix_key">Chave PIX</Label>
                 <Input
                   id="pix_key"
                   {...form.register('pix_key')}
-                  placeholder="Chave PIX"
-                  className={cn(
-                    form.formState.errors.pix_key && "border-red-500 focus-visible:ring-red-500"
-                  )}
+                  className={cn(errors.pix_key && 'border-red-500')}
                 />
-                {form.formState.errors.pix_key && (
-                  <p className="text-sm text-red-500">{form.formState.errors.pix_key.message}</p>
+                {errors.pix_key && (
+                  <p className="text-sm text-red-500">{errors.pix_key.message}</p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="pix_key_type">Tipo da Chave PIX</Label>
                 <Select
-                  value={form.watch('pix_key_type')}
-                  onValueChange={(value) => form.setValue('pix_key_type', value as 'cpf' | 'email' | 'phone' | 'random')}
+                  value={watch('pix_key_type') || ''}
+                  onValueChange={(value) => setValue('pix_key_type', value as any)}
                 >
-                  <SelectTrigger className={cn(
-                    form.formState.errors.pix_key_type && "border-red-500 focus-visible:ring-red-500"
-                  )}>
-                    <SelectValue />
+                  <SelectTrigger className={cn(errors.pix_key_type && 'border-red-500')}>
+                    <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="">Selecione</SelectItem>
                     <SelectItem value="cpf">CPF</SelectItem>
                     <SelectItem value="email">E-mail</SelectItem>
                     <SelectItem value="phone">Telefone</SelectItem>
                     <SelectItem value="random">Chave Aleatória</SelectItem>
                   </SelectContent>
                 </Select>
-                {form.formState.errors.pix_key_type && (
-                  <p className="text-sm text-red-500">{form.formState.errors.pix_key_type.message}</p>
+                {errors.pix_key_type && (
+                  <p className="text-sm text-red-500">{errors.pix_key_type.message}</p>
                 )}
               </div>
             </div>
@@ -584,17 +529,10 @@ export function CollaboratorForm({ mode, collaboratorId, onSuccess }: Collaborat
         </Card>
 
         {/* Submit Button */}
-        <div className="flex justify-end gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.push('/collaborators')}
-          >
-            Cancelar
-          </Button>
-          <Button type="submit" disabled={loading || form.formState.isSubmitting}>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={loading}>
             <Save className="h-4 w-4 mr-2" />
-            {loading || form.formState.isSubmitting ? 'Salvando...' : mode === 'create' ? 'Criar Colaborador' : 'Atualizar Colaborador'}
+            {loading ? 'Salvando...' : mode === 'create' ? 'Criar Colaborador' : 'Atualizar Colaborador'}
           </Button>
         </div>
       </form>

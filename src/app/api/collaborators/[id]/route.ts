@@ -6,7 +6,7 @@ export const GET = withAuth(async (req: NextRequest, user, { params }: { params:
   try {
     const { id } = params;
     const supabase = getSupabase();
-
+    
     const { data: collaborator, error } = await supabase
       .from('collaborators')
       .select('*')
@@ -14,28 +14,13 @@ export const GET = withAuth(async (req: NextRequest, user, { params }: { params:
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') { // No rows returned
-        return NextResponse.json(
-          { message: 'Colaborador não encontrado' },
-          { status: 404 }
-        );
-      }
-
-      console.error('Error fetching collaborator:', error);
-      return NextResponse.json(
-        { message: 'Erro ao buscar colaborador' },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: 'Colaborador não encontrado' }, { status: 404 });
     }
 
     return NextResponse.json(collaborator);
-
   } catch (error) {
-    console.error('Error in GET /api/collaborators/[id]:', error);
-    return NextResponse.json(
-      { message: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Error fetching collaborator:', error);
+    return NextResponse.json({ message: 'Erro interno do servidor' }, { status: 500 });
   }
 });
 
@@ -45,67 +30,38 @@ export const PUT = withAuth(async (req: NextRequest, user, { params }: { params:
     const body = await req.json();
     const supabase = getSupabase();
 
-    // Check if user has permission to update this collaborator
-    if (user.role === 'coordinator') {
-      // Coordinators can only edit collaborators they created
-      const { data: existingCollaborator, error: fetchError } = await supabase
-        .from('collaborators')
-        .select('created_by')
-        .eq('id', id)
-        .single();
+    // Verificar se o colaborador existe
+    const { data: existingCollaborator, error: fetchError } = await supabase
+      .from('collaborators')
+      .select('id')
+      .eq('id', id)
+      .single();
 
-      if (fetchError || !existingCollaborator) {
-        return NextResponse.json(
-          { message: 'Colaborador não encontrado' },
-          { status: 404 }
-        );
-      }
-
-      if (existingCollaborator.created_by !== user.id) {
-        return NextResponse.json(
-          { message: 'Sem permissão para editar este colaborador' },
-          { status: 403 }
-        );
-      }
-    } else if (user.role !== 'admin') {
-      return NextResponse.json(
-        { message: 'Sem permissão para editar colaboradores' },
-        { status: 403 }
-      );
+    if (fetchError) {
+      return NextResponse.json({ message: 'Colaborador não encontrado' }, { status: 404 });
     }
 
-    // Update the collaborator
+    // Atualizar colaborador
     const { data: collaborator, error } = await supabase
       .from('collaborators')
-      .update(body)
+      .update({
+        ...body,
+        updated_at: new Date().toISOString(),
+        updated_by: user.id
+      })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
       console.error('Error updating collaborator:', error);
-      
-      if (error.code === '23505') { // Unique constraint violation
-        return NextResponse.json(
-          { message: 'CPF já cadastrado' },
-          { status: 409 }
-        );
-      }
-
-      return NextResponse.json(
-        { message: 'Erro ao atualizar colaborador' },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: 'Erro ao atualizar colaborador' }, { status: 500 });
     }
 
     return NextResponse.json(collaborator);
-
   } catch (error) {
-    console.error('Error in PUT /api/collaborators/[id]:', error);
-    return NextResponse.json(
-      { message: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Error updating collaborator:', error);
+    return NextResponse.json({ message: 'Erro interno do servidor' }, { status: 500 });
   }
 });
 
@@ -114,63 +70,35 @@ export const DELETE = withAuth(async (req: NextRequest, user, { params }: { para
     const { id } = params;
     const supabase = getSupabase();
 
-    // Check if user has permission to delete this collaborator
-    if (user.role === 'coordinator') {
-      // Coordinators can only delete collaborators they created
-      const { data: existingCollaborator, error: fetchError } = await supabase
-        .from('collaborators')
-        .select('created_by')
-        .eq('id', id)
-        .single();
+    // Verificar se o colaborador existe
+    const { data: existingCollaborator, error: fetchError } = await supabase
+      .from('collaborators')
+      .select('id, name')
+      .eq('id', id)
+      .single();
 
-      if (fetchError || !existingCollaborator) {
-        return NextResponse.json(
-          { message: 'Colaborador não encontrado' },
-          { status: 404 }
-        );
-      }
-
-      if (existingCollaborator.created_by !== user.id) {
-        return NextResponse.json(
-          { message: 'Sem permissão para excluir este colaborador' },
-          { status: 403 }
-        );
-      }
-    } else if (user.role !== 'admin') {
-      return NextResponse.json(
-        { message: 'Sem permissão para excluir colaboradores' },
-        { status: 403 }
-      );
+    if (fetchError) {
+      return NextResponse.json({ message: 'Colaborador não encontrado' }, { status: 404 });
     }
 
-    // Check if collaborator has any related data (future implementation)
-    // For now, we'll implement soft delete by setting status to 'inactive'
-    
-    const { data: collaborator, error } = await supabase
+    // Soft delete - marcar como inativo
+    const { error } = await supabase
       .from('collaborators')
-      .update({ status: 'inactive' })
-      .eq('id', id)
-      .select()
-      .single();
+      .update({
+        status: 'inactive',
+        updated_at: new Date().toISOString(),
+        updated_by: user.id
+      })
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting collaborator:', error);
-      return NextResponse.json(
-        { message: 'Erro ao excluir colaborador' },
-        { status: 500 }
-      );
+      return NextResponse.json({ message: 'Erro ao excluir colaborador' }, { status: 500 });
     }
 
-    return NextResponse.json({
-      message: 'Colaborador excluído com sucesso',
-      collaborator
-    });
-
+    return NextResponse.json({ message: 'Colaborador excluído com sucesso' });
   } catch (error) {
-    console.error('Error in DELETE /api/collaborators/[id]:', error);
-    return NextResponse.json(
-      { message: 'Erro interno do servidor' },
-      { status: 500 }
-    );
+    console.error('Error deleting collaborator:', error);
+    return NextResponse.json({ message: 'Erro interno do servidor' }, { status: 500 });
   }
 });

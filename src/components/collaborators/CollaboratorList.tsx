@@ -36,23 +36,21 @@ import { formatCPF, formatPhone, formatDate } from '@/lib/utils/formatters';
 interface CollaboratorListProps {
   collaborators: Collaborator[];
   loading: boolean;
-  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onView: (id: string) => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  total: number;
 }
 
 export function CollaboratorList({
   collaborators,
   loading,
-  onEdit,
   onDelete,
-  onView,
   currentPage,
   totalPages,
   onPageChange,
+  total,
 }: CollaboratorListProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [collaboratorToDelete, setCollaboratorToDelete] = useState<Collaborator | null>(null);
@@ -194,18 +192,7 @@ export function CollaboratorList({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onView(collaborator.id)}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          Visualizar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onEdit(collaborator.id)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteClick(collaborator)}
-                          className="text-red-600"
-                        >
+                        <DropdownMenuItem onClick={() => onDelete(collaborator.id)}>
                           <Trash2 className="mr-2 h-4 w-4" />
                           Excluir
                         </DropdownMenuItem>
