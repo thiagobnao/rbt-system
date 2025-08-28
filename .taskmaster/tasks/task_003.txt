@@ -1,6 +1,6 @@
 # Task ID: 3
 # Title: Collaborator Registration Module
-# Status: not_started
+# Status: pending
 # Dependencies: 1, 2
 # Priority: high
 # Description: Develop CRUD functionalities for managing collaborator data, including personal, contact, and banking information.
@@ -9,3 +9,41 @@ Design the database schema for collaborators. Implement forms for creating, view
 
 # Test Strategy:
 Perform full CRUD operations for multiple collaborator records. Verify data integrity, correct display of information, and proper handling of invalid inputs.
+
+# Subtasks:
+## 1. Database Schema & RLS for Collaborators [pending]
+### Dependencies: None
+### Description: Design and implement the collaborators table in Supabase with Row Level Security policies
+### Details:
+Create the 'collaborators' table with columns for personal info (name, CPF, birth_date), contact info (email, phone, address), and banking info (bank, agency, account, pix_key). Set up RLS policies to ensure only authorized users (Admins) can manage data.
+
+## 2. API Layer for CRUD Operations [pending]
+### Dependencies: None
+### Description: Implement server-side functions for Create, Read, Update, and Delete operations
+### Details:
+Create API endpoints or Supabase client functions to handle CRUD operations for collaborators. Implement proper error handling, validation, and respect RLS policies. Include functions for listing all collaborators, getting single collaborator, creating new ones, updating existing records, and safe deletion.
+
+## 3. Collaborator List Page UI [pending]
+### Dependencies: None
+### Description: Develop the UI to display a list of all collaborators using Shadcn data table
+### Details:
+Create a responsive page that displays collaborators in a data table with features for pagination, searching by name or CPF, and filtering. Each row should have action buttons for edit and delete operations. Use Shadcn components for consistent styling and good UX.
+
+## 4. Collaborator Form Component [pending]
+### Dependencies: None
+### Description: Build a reusable form component for both creating and editing collaborators
+### Details:
+Create a comprehensive form with logical sections: Personal Details (name, CPF, birth_date), Contact Info (email, phone, address), and Banking Info (bank, agency, account, pix_key). Use Shadcn components like Card and Input. The form should handle both create and edit modes, pre-populating data when editing.
+
+## 5. Form Validation & State Management [pending]
+### Dependencies: None
+### Description: Integrate Zod for comprehensive validation and manage form state
+### Details:
+Create Zod schemas to validate all fields including custom validators for Brazilian CPF and banking details. Implement form state management, API loading/error states, and provide user feedback with toast notifications. Handle form submission, success/error states, and data persistence.
+
+## 6. Delete Functionality with Confirmation [pending]
+### Dependencies: None
+### Description: Implement safe deletion with user confirmation dialog
+### Details:
+Add a delete action that triggers a Shadcn AlertDialog to ask for user confirmation before permanently deleting a collaborator record. Implement soft delete if possible, or ensure proper cleanup of related data. Provide clear feedback about the deletion process and any potential impacts.
+

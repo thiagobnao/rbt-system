@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Authentication and User Management
-# Status: not_started
+# Status: done
 # Dependencies: 1
 # Priority: high
 # Description: Implement user authentication (login/password) and role-based access control for Admin, Coordinator, and Common User profiles.
@@ -9,3 +9,41 @@ Integrate Supabase Auth, define user roles and permissions, implement secure log
 
 # Test Strategy:
 Test login/logout for each user role. Verify that users can only access authorized routes. Confirm session expiration works as expected.
+
+# Subtasks:
+## 1. Design and Create User Database Schema [done]
+### Dependencies: None
+### Description: Define the database table structure for storing user information, including fields for ID, email, and a securely hashed password.
+### Details:
+Create a 'users' table with columns: `id` (Primary Key, auto-increment), `email` (VARCHAR, unique, not null), `password_hash` (VARCHAR, not null), `created_at` (TIMESTAMP), `updated_at` (TIMESTAMP). Generate and apply the corresponding database migration script.
+
+## 2. Implement Secure Password Hashing Service [done]
+### Dependencies: None
+### Description: Create a reusable service with functions to securely hash a new password for storage and to verify a submitted password against a stored hash.
+### Details:
+Use a strong, standard, and salted hashing algorithm like bcrypt or Argon2. Create two primary functions: `hashPassword(plainTextPassword)` which returns a hash string, and `verifyPassword(plainTextPassword, storedHash)` which returns a boolean.
+
+## 3. Develop User Registration API Endpoint [done]
+### Dependencies: None
+### Description: Create the `POST /api/auth/register` endpoint that allows a new user to create an account.
+### Details:
+The endpoint should accept `email` and `password`. It must validate the input (e.g., valid email format, password complexity), check if the email is already in use, use the Password Hashing Service to hash the password, and store the new user record in the database. On success, return a 201 Created status.
+
+## 4. Implement JWT Generation and Validation Service [done]
+### Dependencies: None
+### Description: Create a service for generating and validating JSON Web Tokens (JWTs) to manage user sessions.
+### Details:
+Use a reputable JWT library. Create a `generateToken(userId)` function that creates a signed token containing the user's ID in the payload and a reasonable expiration time. Create a `validateToken(token)` function that verifies the token's signature and expiration, returning the decoded payload if valid or null/error if invalid.
+
+## 5. Develop User Login API Endpoint [done]
+### Dependencies: None
+### Description: Create the `POST /api/auth/login` endpoint to authenticate users and issue a JWT.
+### Details:
+The endpoint should accept `email` and `password`. It will find the user by email, use the Password Hashing Service to verify the password against the stored hash, and if credentials are valid, use the JWT Service to generate an access token. Return the JWT in the response body.
+
+## 6. Create Authentication Middleware for Protected Routes [done]
+### Dependencies: None
+### Description: Implement middleware to secure specific API routes, allowing access only to requests with a valid JWT.
+### Details:
+The middleware should extract the JWT from the `Authorization: Bearer <token>` header. It will use the JWT Validation Service to verify the token. If valid, it should attach user information (like `userId` from the token payload) to the request object and pass control to the route handler. If the token is missing or invalid, it must return a 401 Unauthorized or 403 Forbidden error.
+

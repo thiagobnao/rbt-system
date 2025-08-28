@@ -1,93 +1,21 @@
 {
 	"meta": {
-		"generatedAt": "2025-08-28T00:15:31.986Z",
+		"generatedAt": "2025-08-28T16:37:08.544Z",
 		"tasksAnalyzed": 1,
 		"totalTasks": 15,
-		"analysisCount": 10,
+		"analysisCount": 1,
 		"thresholdScore": 5,
 		"projectName": "Task Master",
 		"usedResearch": true
 	},
 	"complexityAnalysis": [
 		{
-			"taskId": 1,
-			"taskTitle": "Development Environment Setup",
-			"complexityScore": 3,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Expand the 'Development Environment Setup' task into subtasks covering Next.js project initialization with TypeScript and Tailwind, Supabase client setup and environment variable configuration, Shadcn UI installation and theming, and integrating a sample component from Aceternity UI to verify the setup.",
-			"reasoning": "This is a foundational task involving standard, well-documented procedures. The complexity is low as it doesn't involve custom business logic, but breaking it down ensures each part of the stack (framework, database, UI) is configured and verified independently."
-		},
-		{
-			"taskId": 2,
-			"taskTitle": "Authentication and User Management",
-			"complexityScore": 7,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Expand the 'Authentication and User Management' task into subtasks. Include creating the user schema with roles in Supabase, building the UI for login/signup/logout, implementing Supabase Auth functions, creating middleware for route protection, and implementing role-based access control (RBAC) for different user types.",
-			"reasoning": "This task is complex due to its security-critical nature. It involves frontend UI, backend authentication logic, database schema for roles, and implementing route protection (middleware). Separating these concerns into subtasks is crucial for a secure and maintainable implementation."
-		},
-		{
-			"taskId": 5,
-			"taskTitle": "Core UI/UX and Responsive Design",
-			"complexityScore": 5,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Expand the 'Core UI/UX and Responsive Design' task into subtasks. Focus on creating a main application layout component, developing the desktop side navigation menu, implementing the responsive behavior for the menu on tablet and mobile devices, and ensuring the overall layout is fluid and adapts to different screen sizes.",
-			"reasoning": "The complexity lies in frontend craftsmanship and ensuring a seamless experience across devices. Building a responsive navigation structure can be tricky. Breaking it down into layout, desktop navigation, and mobile responsiveness follows a standard, effective frontend workflow."
-		},
-		{
 			"taskId": 3,
 			"taskTitle": "Collaborator Registration Module",
 			"complexityScore": 6,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Expand the 'Collaborator Registration Module' task into subtasks. Include designing the database schema in Supabase, building the form UI for creating and editing collaborators, implementing the backend logic for Create/Update operations with data validation (e.g., CPF), developing the Read functionality (list and detail views), and implementing the Delete functionality.",
-			"reasoning": "This is a standard CRUD task, but its complexity is increased by the need for robust validation of sensitive data (personal, banking). Following the classic CRUD breakdown (Schema, Create/Update, Read, Delete) ensures each part of the functionality is built and tested systematically."
-		},
-		{
-			"taskId": 4,
-			"taskTitle": "School/Location Registration Module",
-			"complexityScore": 6,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Expand the 'School/Location Registration Module' task into subtasks. Include designing the database schema for locations, building the form UI for creating and editing records, implementing the backend logic for Create/Update operations, developing the Read functionality (list and detail views), and implementing the Delete functionality.",
-			"reasoning": "Similar in complexity to the collaborator module, this is a core CRUD feature. The potential for logic in capacity calculations adds a layer of complexity. A standard CRUD breakdown is the most efficient way to manage implementation and testing."
-		},
-		{
-			"taskId": 15,
-			"taskTitle": "Data Migration Tool Development",
-			"complexityScore": 8,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Expand the 'Data Migration Tool Development' task into subtasks. Include creating a mechanism for file upload, implementing a parser for spreadsheet files, developing a data transformation and cleansing engine with validation rules, creating the logic to bulk-insert clean data into the database, and designing a system for error handling and reporting on failed records.",
-			"reasoning": "This task is highly complex due to the unpredictable nature of source data. It requires file parsing, complex validation/cleansing logic, and robust error handling for a potentially large dataset. A phased approach (Parse, Cleanse, Insert, Report Errors) is essential to de-risk the process."
-		},
-		{
-			"taskId": 7,
-			"taskTitle": "Collaborator Allocation Tool",
-			"complexityScore": 7,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Expand the 'Collaborator Allocation Tool' task into subtasks. Include designing the database schema for allocations, developing the user interface for assigning collaborators to locations and functions, implementing the backend logic to save assignments, and creating the specific validation rule to detect and alert users about double allocations.",
-			"reasoning": "The complexity comes from managing the many-to-many relationship and implementing the critical business rule of preventing double allocation. The UI must be intuitive, and the backend validation logic must be foolproof. Separating schema, UI, and backend logic is a clean approach."
-		},
-		{
-			"taskId": 14,
-			"taskTitle": "Performance Optimization",
-			"complexityScore": 9,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Expand the 'Performance Optimization' task into subtasks. Include setting up a load testing framework, profiling and optimizing database queries (especially for reports), analyzing and improving API response times, optimizing frontend rendering performance, and executing load tests to verify the system supports 50 concurrent users.",
-			"reasoning": "This is a highly complex, non-functional requirement that requires specialized skills in profiling, database optimization (indexing), and load testing. It's an investigative process with no single solution. Breaking it down by system layer (DB, API, Frontend) and testing is a systematic way to tackle the problem."
-		},
-		{
-			"taskId": 13,
-			"taskTitle": "Security and Compliance Implementation",
-			"complexityScore": 8,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Expand the 'Security and Compliance Implementation' task into subtasks. Include designing and implementing an audit log system for critical actions, conducting a data review to identify sensitive data, implementing technical measures for LGPD compliance like data encryption, and creating procedures to handle user data access and deletion requests.",
-			"reasoning": "This task carries high legal and security risks. It combines a specific technical implementation (audit logs) with a broad, legally-mandated compliance effort (LGPD). The complexity lies in correctly interpreting requirements and applying them consistently across the entire application."
-		},
-		{
-			"taskId": 12,
-			"taskTitle": "Official Document Management (Simplified)",
-			"complexityScore": 6,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Expand the 'Official Document Management' task into subtasks. Include designing a way to manage document templates, creating the UI for users to select a template and generate a document, implementing the backend logic for data merging and file generation (e.g., PDF), and adding functionality to track the status of each document.",
-			"reasoning": "The complexity depends on the chosen document format (e.g., PDF generation is more complex than HTML). The task involves data merging, file generation, and state management. Separating template management, UI, generation logic, and status tracking makes the feature modular and easier to test."
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Based on the requirements for Task 3: Collaborator Registration Module, expand it into the following subtasks. The goal is to create a complete CRUD system for managing collaborators using Next.js and Supabase. Ensure the subtasks cover database schema design, backend API logic with security, a comprehensive list view, a detailed multi-section form for creation/editing, robust data validation, and a safe deletion process.\n\n1. **Database Schema & RLS:** Design and implement the `collaborators` table in Supabase. Include columns for personal (name, CPF, etc.), contact (email, phone), and banking information. Set up Row Level Security (RLS) policies to ensure only authorized users (e.g., Admins) can manage data.\n2. **API Layer for CRUD:** Implement the server-side functions or client-side Supabase calls to handle Create, Read (all and single), Update, and Delete operations for collaborators, respecting the RLS policies.\n3. **UI - Collaborator List Page:** Develop the UI to display a list of all collaborators using a Shadcn data table. Implement features for pagination, searching by name or CPF, and filtering. Each row should have action buttons to navigate to edit or trigger deletion.\n4. **UI - Collaborator Form (Create/Edit):** Build a reusable form component for both creating and editing collaborators. Structure the form into logical sections (Personal Details, Contact Info, Banking Info) using Shadcn components like `Card` and `Input`.\n5. **Form Validation & State Management:** Integrate Zod for comprehensive client-side and server-side validation. Create schemas to validate all fields, including a custom validator for Brazilian CPF and banking details. Manage form state, API loading/error states, and provide user feedback with toast notifications.\n6. **Implement Delete Functionality:** Add a delete action that triggers a Shadcn `AlertDialog` to ask for user confirmation before permanently deleting a collaborator record.",
+			"reasoning": "The task is of medium complexity (6/10) as it involves a full CRUD lifecycle, which includes database schema design, backend logic with security (RLS), a multi-section frontend form, and complex, specific data validation (e.g., CPF, banking details). While it follows a standard pattern, the number of components and the need for robust validation and security add significant effort compared to a simpler CRUD task. Breaking it into 6 subtasks allows for a clear separation of concerns: database, backend API, list UI, form UI, validation logic, and the delete workflow."
 		}
 	]
 }

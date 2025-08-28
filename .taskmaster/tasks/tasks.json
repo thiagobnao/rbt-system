@@ -9,7 +9,7 @@
         "testStrategy": "Verify that the local development server starts without errors, Supabase connection is established, and basic UI components from Shadcn/Aceternity UI can be rendered.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -59,8 +59,63 @@
         "dependencies": [
           1
         ],
-        "status": "not_started",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Create User Database Schema",
+            "description": "Define the database table structure for storing user information, including fields for ID, email, and a securely hashed password.",
+            "dependencies": [],
+            "details": "Create a 'users' table with columns: `id` (Primary Key, auto-increment), `email` (VARCHAR, unique, not null), `password_hash` (VARCHAR, not null), `created_at` (TIMESTAMP), `updated_at` (TIMESTAMP). Generate and apply the corresponding database migration script.",
+            "status": "done",
+            "testStrategy": "Verify the 'users' table is created in the database with the correct columns, types, and constraints. Manually attempt to insert data to confirm constraints (e.g., uniqueness of email) are enforced."
+          },
+          {
+            "id": 2,
+            "title": "Implement Secure Password Hashing Service",
+            "description": "Create a reusable service with functions to securely hash a new password for storage and to verify a submitted password against a stored hash.",
+            "dependencies": [],
+            "details": "Use a strong, standard, and salted hashing algorithm like bcrypt or Argon2. Create two primary functions: `hashPassword(plainTextPassword)` which returns a hash string, and `verifyPassword(plainTextPassword, storedHash)` which returns a boolean.",
+            "status": "done",
+            "testStrategy": "Write unit tests for the service. Confirm that `hashPassword` produces a valid, non-reversible hash. Test that `verifyPassword` returns `true` for the correct password and `false` for an incorrect one. Ensure two hashes of the same password are not identical due to salting."
+          },
+          {
+            "id": 3,
+            "title": "Develop User Registration API Endpoint",
+            "description": "Create the `POST /api/auth/register` endpoint that allows a new user to create an account.",
+            "dependencies": [],
+            "details": "The endpoint should accept `email` and `password`. It must validate the input (e.g., valid email format, password complexity), check if the email is already in use, use the Password Hashing Service to hash the password, and store the new user record in the database. On success, return a 201 Created status.",
+            "status": "done",
+            "testStrategy": "Use an API testing tool (e.g., Postman) to send requests. Test the success case with new, valid data. Test failure cases like duplicate email, missing fields, and invalid email format. Verify the new user is correctly stored in the database with a properly hashed password."
+          },
+          {
+            "id": 4,
+            "title": "Implement JWT Generation and Validation Service",
+            "description": "Create a service for generating and validating JSON Web Tokens (JWTs) to manage user sessions.",
+            "dependencies": [],
+            "details": "Use a reputable JWT library. Create a `generateToken(userId)` function that creates a signed token containing the user's ID in the payload and a reasonable expiration time. Create a `validateToken(token)` function that verifies the token's signature and expiration, returning the decoded payload if valid or null/error if invalid.",
+            "status": "done",
+            "testStrategy": "Write unit tests. Test that `generateToken` creates a structurally correct, signed token. Test that `validateToken` successfully validates a fresh token and correctly rejects tampered, expired, or malformed tokens."
+          },
+          {
+            "id": 5,
+            "title": "Develop User Login API Endpoint",
+            "description": "Create the `POST /api/auth/login` endpoint to authenticate users and issue a JWT.",
+            "dependencies": [],
+            "details": "The endpoint should accept `email` and `password`. It will find the user by email, use the Password Hashing Service to verify the password against the stored hash, and if credentials are valid, use the JWT Service to generate an access token. Return the JWT in the response body.",
+            "status": "done",
+            "testStrategy": "Use an API testing tool. Test with correct credentials to ensure a valid JWT is returned. Test with incorrect credentials (wrong password, non-existent email) to ensure a 401 Unauthorized error is returned. Verify the returned JWT can be decoded."
+          },
+          {
+            "id": 6,
+            "title": "Create Authentication Middleware for Protected Routes",
+            "description": "Implement middleware to secure specific API routes, allowing access only to requests with a valid JWT.",
+            "dependencies": [],
+            "details": "The middleware should extract the JWT from the `Authorization: Bearer <token>` header. It will use the JWT Validation Service to verify the token. If valid, it should attach user information (like `userId` from the token payload) to the request object and pass control to the route handler. If the token is missing or invalid, it must return a 401 Unauthorized or 403 Forbidden error.",
+            "status": "done",
+            "testStrategy": "Create a sample protected route (e.g., `GET /api/profile`). Test accessing it without a token (expect 401). Test with an invalid/expired token (expect 401/403). Test with a valid token obtained from the login endpoint (expect 200 OK and access to the route)."
+          }
+        ]
       },
       {
         "id": 3,
@@ -73,8 +128,63 @@
           1,
           2
         ],
-        "status": "not_started",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Database Schema & RLS for Collaborators",
+            "description": "Design and implement the collaborators table in Supabase with Row Level Security policies",
+            "details": "Create the 'collaborators' table with columns for personal info (name, CPF, birth_date), contact info (email, phone, address), and banking info (bank, agency, account, pix_key). Set up RLS policies to ensure only authorized users (Admins) can manage data.\n<info added on 2025-08-28T16:41:08.397Z>\nDevelop RESTful API endpoints to handle full CRUD (Create, Read, Update, Delete) operations for collaborator data. Ensure all API interactions respect the established Row Level Security (RLS) policies. Integrate with the existing TypeScript types (`src/lib/types/collaborator.ts`) for data modeling and leverage Zod schemas (`src/lib/validations/collaborator.ts`) for robust input validation, including specific Brazilian data formats (CPF, phone, address, etc.).\n</info added on 2025-08-28T16:41:08.397Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "API Layer for CRUD Operations",
+            "description": "Implement server-side functions for Create, Read, Update, and Delete operations",
+            "details": "Create API endpoints or Supabase client functions to handle CRUD operations for collaborators. Implement proper error handling, validation, and respect RLS policies. Include functions for listing all collaborators, getting single collaborator, creating new ones, updating existing records, and safe deletion.\n<info added on 2025-08-28T16:43:07.253Z>\n**Implementation Details Update:**\n- **API Endpoints:**\n    - `src/app/api/collaborators/route.ts`: Implemented GET for listing collaborators with filters (name/CPF, status, city, state), pagination, and sorting by creation date. POST for creating new collaborators includes permission validation (admin/coordinator) and duplicate CPF handling.\n    - `src/app/api/collaborators/[id]/route.ts`: Implemented GET for fetching a specific collaborator (with not-found handling), PUT for updating (with role-based permissions: coordinators self-edit, admins any-edit), and DELETE for safe deletion (soft delete to 'inactive' with permission validation and preparation for related data checks).\n- **Client Service:** `src/lib/services/collaboratorService.ts` provides a client-side class with methods for all operations, consistent error handling, auxiliary filter methods (cities, states), and automatic authentication token management.\n- **Security & Validation:** All endpoints enforce mandatory authentication, role-based access control, respect RLS policies, and utilize Zod schemas for input validation.\n</info added on 2025-08-28T16:43:07.253Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "Collaborator List Page UI",
+            "description": "Develop the UI to display a list of all collaborators using Shadcn data table",
+            "details": "Create a responsive page that displays collaborators in a data table with features for pagination, searching by name or CPF, and filtering. Each row should have action buttons for edit and delete operations. Use Shadcn components for consistent styling and good UX.\n<info added on 2025-08-28T17:51:16.593Z>\nImplemented features include: advanced filtering by status, city, and state; data table with columns for Name, CPF, Contact, City/State, Status, and Actions (View, Edit, Delete); confirmation dialog for deletion using AlertDialog; loading states with skeleton components; empty state display; Brazilian data formatting (CPF, phone); colored status badges; API integration via `collaboratorService`; toast notifications for feedback; and navigation to creation/editing pages. Key Shadcn components used: Card, Button, Input, Select, Badge, Table, DropdownMenu, AlertDialog, Skeleton. Responsiveness includes adaptive layout for mobile/tablet/desktop, responsive filter grid, and horizontal table scroll on small screens. Files created: `src/app/collaborators/page.tsx`, `src/components/collaborators/CollaboratorList.tsx`, `src/lib/utils/formatters.ts`.\n</info added on 2025-08-28T17:51:16.593Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "Collaborator Form Component",
+            "description": "Build a reusable form component for both creating and editing collaborators",
+            "details": "Create a comprehensive form with logical sections: Personal Details (name, CPF, birth_date), Contact Info (email, phone, address), and Banking Info (bank, agency, account, pix_key). Use Shadcn components like Card and Input. The form should handle both create and edit modes, pre-populating data when editing.\n<info added on 2025-08-28T17:56:06.671Z>\nThe form's logical sections are now explicitly defined as Personal Details, Contact Info, Address, and Banking Info, enhanced with Lucide icons for better UX. Beyond Card and Input, Shadcn components like Button, Label, Select, and Separator are utilized. The implementation includes a responsive layout with an adaptive grid (1 column on mobile, 2 columns on desktop), loading states with skeleton components, and basic validation for mandatory fields (name, CPF). It integrates with the API using `collaboratorService`, provides visual feedback via toast notifications, and includes navigation buttons. A dedicated collaborator detail/view page (`src/app/collaborators/[id]/page.tsx`) has also been developed, featuring an organized card layout and colored status badges. Brazilian data formatting (CPF, phone, CEP, dates) and error handling with automatic redirection are also implemented.\n</info added on 2025-08-28T17:56:06.671Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 5,
+            "title": "Form Validation & State Management",
+            "description": "Integrate Zod for comprehensive validation and manage form state",
+            "details": "Create Zod schemas to validate all fields including custom validators for Brazilian CPF and banking details. Implement form state management, API loading/error states, and provide user feedback with toast notifications. Handle form submission, success/error states, and data persistence.\n<info added on 2025-08-28T18:04:33.713Z>\nThe implementation successfully integrated React Hook Form with Zod for comprehensive validation and state management. This includes real-time validation using `createCollaboratorSchema` and `updateCollaboratorSchema`, handling server-side validation errors, and automatic control of loading/submission states. The form also features automatic reset when loading data for editing. Visual feedback is enhanced with red borders and specific error messages below fields, in addition to toast notifications. API errors are mapped to specific fields, and the submit button is disabled during submission. Key dependencies installed include `react-hook-form`, `@hookform/resolvers`, `clsx`, and `tailwind-merge`.\n</info added on 2025-08-28T18:04:33.713Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 6,
+            "title": "Delete Functionality with Confirmation",
+            "description": "Implement safe deletion with user confirmation dialog",
+            "details": "Add a delete action that triggers a Shadcn AlertDialog to ask for user confirmation before permanently deleting a collaborator record. Implement soft delete if possible, or ensure proper cleanup of related data. Provide clear feedback about the deletion process and any potential impacts.\n<info added on 2025-08-28T18:05:07.544Z>\n**Update:** The delete functionality with confirmation is fully implemented. It uses a Shadcn AlertDialog in `CollaboratorList.tsx` for user confirmation, displaying the collaborator's name and a clear message. The deletion flow is initiated via a dropdown button, with visual feedback and toast notifications. The backend implements a `DELETE /api/collaborators/[id]` endpoint with soft delete (setting status to 'inactive') and robust role-based access control (admins can delete any, coordinators can delete their own). The client-side `collaboratorService` handles the API call, error management, and authentication. The list automatically reloads after deletion.\n</info added on 2025-08-28T18:05:07.544Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          }
+        ]
       },
       {
         "id": 4,
@@ -249,7 +359,7 @@
     ],
     "metadata": {
       "created": "2025-08-28T00:01:39.743Z",
-      "updated": "2025-08-28T14:48:40.988Z",
+      "updated": "2025-08-28T18:05:20.246Z",
       "description": "Tasks for master context"
     }
   }

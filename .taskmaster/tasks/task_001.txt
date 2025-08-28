@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Development Environment Setup
-# Status: not_started
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: Set up the core development environment including Next.js, Supabase, and integrate UI libraries like Shadcn and Aceternity UI.
@@ -9,3 +9,32 @@ Initialize the Next.js project, configure Supabase connection for database and a
 
 # Test Strategy:
 Verify that the local development server starts without errors, Supabase connection is established, and basic UI components from Shadcn/Aceternity UI can be rendered.
+
+# Subtasks:
+## 1. Design and Implement User Database Schema [done]
+### Dependencies: None
+### Description: Create the necessary database table to store user information, including credentials and profile data. This is the foundational step for all other authentication tasks.
+### Details:
+Define a 'users' table with columns for 'id' (primary key, auto-increment), 'email' (unique, not null), 'password_hash' (string, not null), 'created_at', and 'updated_at'. Use a database migration tool like Alembic or Flyway to script and apply this schema change.
+<info added on 2025-08-28T00:25:11.284Z>
+The 'users' table has been defined and migrated. The schema includes 'id' (UUID, Primary Key), 'email' (VARCHAR, Unique, Not Null), 'password_hash' (VARCHAR, Not Null), 'role' (ENUM: admin, coordinator, common), 'created_at' (Timestamp), and 'updated_at' (Timestamp with automatic trigger). The database migration script is `src/lib/migrations/001_create_users_table.sql` with a corresponding rollback script. Indices `idx_users_email` and `idx_users_role` have been created. The development environment is fully configured with Next.js, Supabase, Tailwind CSS, bcryptjs, jsonwebtoken, and zod.
+</info added on 2025-08-28T00:25:11.284Z>
+
+## 2. Develop User Registration API Endpoint [done]
+### Dependencies: None
+### Description: Implement the backend endpoint (e.g., POST /api/auth/register) that allows new users to create an account.
+### Details:
+The endpoint should accept an email and password. It must validate the input (e.g., valid email format, password complexity), check if the email is already in use, hash the password using bcrypt, and store the new user record in the database. Return a 201 Created status on success.
+
+## 3. Develop User Login API Endpoint and JWT Generation [done]
+### Dependencies: None
+### Description: Implement the backend endpoint (e.g., POST /api/auth/login) for authenticating users and issuing a JSON Web Token (JWT).
+### Details:
+The endpoint should accept an email and password. It will retrieve the user by email, compare the provided password against the stored hash using bcrypt. If credentials are valid, generate a signed JWT containing the user's ID and an expiration date. Return the JWT in the response body.
+
+## 4. Create Authentication Middleware for Protected Routes [done]
+### Dependencies: None
+### Description: Develop middleware to verify the JWT on incoming requests to secure specific API endpoints.
+### Details:
+The middleware should extract the JWT from the 'Authorization: Bearer <token>' header. It must verify the token's signature and check for expiration. If valid, decode the payload and attach the user's identity to the request context for use in protected route handlers. If invalid, it must return a 401 Unauthorized response.
+
