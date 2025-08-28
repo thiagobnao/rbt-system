@@ -12,9 +12,20 @@ node_modules/
 # Environment variables
 .env
 
+# Next.js build output
+.next/
+out/
+
+# TypeScript generated files
+next-env.d.ts
+
+# Package lock (optional - can cause conflicts in teams)
+package-lock.json
+
 # Editor directories and files
 .idea
 .vscode
+.cursor/
 *.suo
 *.ntvs*
 *.njsproj
@@ -23,3 +34,8 @@ node_modules/
 
 # OS specific
 .DS_Store
+Thumbs.db
+
+# Taskmaster temporary files (optional)
+.taskmaster/reports/
+.taskmaster/cache/
