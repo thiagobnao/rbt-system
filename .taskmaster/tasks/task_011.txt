@@ -1,0 +1,11 @@
+# Task ID: 11
+# Title: Financial Report Generation
+# Status: not_started
+# Dependencies: 10
+# Priority: high
+# Description: Implement the 'Collaborator Payment History' report, detailing collaborator name, CPF, Pix key, total amount to receive, and breakdown by event.
+# Details:
+Develop a user interface for generating the report. Implement data retrieval and formatting to present the required financial details clearly. Ensure the report is exportable (e.g., PDF, CSV).
+
+# Test Strategy:
+Generate reports for various time periods and collaborator groups. Verify the accuracy of all data points (amounts, breakdowns, personal info) against source data.

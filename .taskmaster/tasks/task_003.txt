@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Collaborator Registration Module
+# Status: not_started
+# Dependencies: 1, 2
+# Priority: high
+# Description: Develop CRUD functionalities for managing collaborator data, including personal, contact, and banking information.
+# Details:
+Design the database schema for collaborators. Implement forms for creating, viewing, editing, and deleting collaborator records. Ensure data validation for all fields (e.g., CPF, banking details).
+
+# Test Strategy:
+Perform full CRUD operations for multiple collaborator records. Verify data integrity, correct display of information, and proper handling of invalid inputs.

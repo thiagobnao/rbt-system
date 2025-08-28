@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: Data Migration Tool Development
+# Status: not_started
+# Dependencies: 3, 4, 6
+# Priority: medium
+# Description: Develop a robust tool for data import and cleansing from existing sources (e.g., spreadsheets) into the new system.
+# Details:
+Create a script or a simple UI for importing existing collaborator, school/location, and event data. Include data validation and cleansing rules to ensure data quality during migration.
+
+# Test Strategy:
+Test the migration tool with various datasets, including 'dirty' data, to ensure proper cleansing and successful import into the new database schemas. Verify data integrity post-migration.

@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Attendance Confirmation Screen
+# Status: not_started
+# Dependencies: 7
+# Priority: medium
+# Description: Develop a post-event screen for coordinators to manually mark 'Present' or 'Absent' status for collaborators based on physical attendance lists.
+# Details:
+Create a user interface that lists allocated collaborators for an event and allows coordinators to easily toggle their attendance status. Update the database with the confirmed attendance.
+
+# Test Strategy:
+Test marking attendance for various collaborators (Present/Absent). Verify that the status updates are correctly saved and reflected in the system.

@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: School/Location Registration Module
+# Status: not_started
+# Dependencies: 1, 2
+# Priority: high
+# Description: Develop CRUD functionalities for managing exam location data, including address, contacts, structure, and room capacity.
+# Details:
+Design the database schema for schools/locations. Implement forms for creating, viewing, editing, and deleting location records. Include fields for address, contact information, and room capacity based on furniture type.
+
+# Test Strategy:
+Perform full CRUD operations for multiple location records. Verify data accuracy, especially for capacity calculations if any logic is involved.

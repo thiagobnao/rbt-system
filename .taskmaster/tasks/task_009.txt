@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Payment Value Configuration
+# Status: not_started
+# Dependencies: 6
+# Priority: high
+# Description: Implement functionality for coordinators to configure the cost assistance table for each function (e.g., Fiscal, Support) within each event registration.
+# Details:
+Develop a user interface within the event registration module that allows defining specific payment rates per function for that particular event. Store these configurations in the database.
+
+# Test Strategy:
+Test setting different payment values for various functions within multiple events. Verify that the configurations are saved correctly and can be retrieved.

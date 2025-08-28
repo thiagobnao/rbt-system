@@ -1,0 +1,11 @@
+# Task ID: 12
+# Title: Official Document Management (Simplified)
+# Status: not_started
+# Dependencies: 3, 6
+# Priority: medium
+# Description: Develop functionality to generate individual official documents for public agencies using pre-defined templates with status control (Pending, Sent, Received).
+# Details:
+Implement a module that allows selecting a template, merging relevant data from the system (e.g., collaborator details, event info), generating the document, and tracking its status.
+
+# Test Strategy:
+Generate several types of documents using different templates. Verify that data is correctly merged into the templates and that document status can be updated and tracked.

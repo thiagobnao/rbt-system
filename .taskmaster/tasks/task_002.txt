@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Authentication and User Management
+# Status: not_started
+# Dependencies: 1
+# Priority: high
+# Description: Implement user authentication (login/password) and role-based access control for Admin, Coordinator, and Common User profiles.
+# Details:
+Integrate Supabase Auth, define user roles and permissions, implement secure login/logout flows, route protection based on roles, and session expiration after inactivity.
+
+# Test Strategy:
+Test login/logout for each user role. Verify that users can only access authorized routes. Confirm session expiration works as expected.

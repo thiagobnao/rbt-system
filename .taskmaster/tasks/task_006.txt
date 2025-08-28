@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Competition/Event Registration Module
+# Status: not_started
+# Dependencies: 2, 3, 4
+# Priority: high
+# Description: Develop CRUD functionalities for creating and managing competition/event details, including name, date, associated organizing board, and expected registrations.
+# Details:
+Design the database schema for events. Implement forms for creating, viewing, editing, and deleting event records. Allow linking to an organizing board.
+
+# Test Strategy:
+Perform full CRUD operations for multiple event records. Verify that event details are correctly stored and displayed.

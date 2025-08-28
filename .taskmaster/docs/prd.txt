@@ -1,0 +1,68 @@
+# RBT System - Product Requirements Document (PRD)
+
+## 1. Product Overview
+
+The RBT System is a web application designed to centralize, automate, and protect critical information related to public competition organization. The system solves the problem of high dependency on spreadsheets, emails, and physical documents, which causes operational risks, excessive manual work, and stress for the coordination team. The solution aims to establish a single source of truth, ensuring security, process control, and the ability to generate reliable audit trails.
+
+## 2. Target Users and Profiles
+
+- **Admin**: Full system access, responsible for general configurations, user management, and global parameters
+- **Coordinator**: Main operational user, responsible for creating and managing events, allocating collaborators, defining teams for exam locations, inserting post-event data, and generating reports
+- **Common User**: Restricted access to specific functionalities based on permissions assigned by Admin
+
+## 3. Core Features and Scope (MVP v1.0)
+
+### 3.1 Module 1: Essential Registration Management (Foundation)
+- **Collaborator Registration**: Centralized database for all collaborators with personal data (Name, RG, CPF, PIS/PASEP), address, contact, and banking information (bank, account, agency, Pix key)
+- **School/Location Registration**: Digital dossier for each exam location, recording address, contacts, structure, and room capacity based on furniture type
+- **Competition/Event Registration**: Functionality to create new events, defining name, date, associated organizing board, and expected registrations
+
+### 3.2 Module 2: Event Operational Flow
+- **Collaborator Allocation**: Tool to assign collaborators to specific locations and functions for each competition, with alerts to prevent double allocation
+- **Attendance Confirmation**: Post-event screen for coordinators to manually mark "Present" or "Absent" status based on physical attendance list
+- **Payment Value Configuration**: Within each event registration, coordinators can configure the cost assistance table for each function (e.g., Fiscal, Support)
+
+### 3.3 Module 3: Outputs and Controls
+- **Automated Payment Calculation**: System cross-references allocation information, confirmed attendance list, and event value table for automatic payment calculation
+- **Financial Reports**: Generation of essential "Collaborator Payment History" report, detailing name, CPF, Pix key, total amount to receive, and breakdown by event
+- **Official Document Management**: Functionality to generate individual official documents for public agencies, using pre-defined templates with status control (Pending, Sent, Received)
+
+## 4. Non-Functional Requirements
+
+- **Usability**: Responsive design adaptable for desktops, tablets, and mobile devices with simple and intuitive navigation through a side menu
+- **Security**: 
+  - Authentication based on login and password with route protection and session expiration after inactivity
+  - Audit logging for critical actions to ensure traceability
+  - LGPD compliance for proper handling of sensitive personal data
+- **Performance**: Support for up to 50 simultaneous users without noticeable performance degradation, fast financial report generation
+
+## 5. Technical Architecture
+
+- **Frontend**: Next.js with TypeScript
+- **UI Libraries**: Shadcn, Aceternity UI
+- **Backend & Database**: Supabase
+- **Infrastructure/Deployment**: Vercel
+
+## 6. Development Roadmap (MVP v1.0)
+
+### Phase 1: Foundation
+- Development environment setup (Next.js, Supabase)
+- Authentication system, access levels, and profile management implementation
+- Development of base registration modules: Collaborators, Schools/Locations, and Organizing Boards
+
+### Phase 2: Main Flow
+- Development of Competition/Event management module
+- Implementation of Collaborator Allocation screen and manual Attendance Confirmation screen
+- Creation of event payment value configuration functionality
+
+### Phase 3: Support and Output Modules
+- Development of Financial Module with focus on automated calculation
+- Implementation of Payment History Report generation
+- Development of Official Document Management module (simplified version)
+
+## 7. Risk Mitigation
+
+- **Team Adoption Risk**: Focus on extremely intuitive user interface, plan training sessions and onboarding before official launch
+- **Data Migration Risk**: Plan data "cleansing" phase before import, develop robust import tool and test exhaustively in staging environment
+- **Interface Complexity Risk**: Design payment value configuration interface with maximum focus on clarity and simplicity, use clear visual feedback
+

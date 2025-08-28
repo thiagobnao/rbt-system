@@ -1,0 +1,256 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Development Environment Setup",
+        "description": "Set up the core development environment including Next.js, Supabase, and integrate UI libraries like Shadcn and Aceternity UI.",
+        "details": "Initialize the Next.js project, configure Supabase connection for database and authentication, and ensure UI component libraries are properly installed and accessible for use.",
+        "testStrategy": "Verify that the local development server starts without errors, Supabase connection is established, and basic UI components from Shadcn/Aceternity UI can be rendered.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Implement User Database Schema",
+            "description": "Create the necessary database table to store user information, including credentials and profile data. This is the foundational step for all other authentication tasks.",
+            "dependencies": [],
+            "details": "Define a 'users' table with columns for 'id' (primary key, auto-increment), 'email' (unique, not null), 'password_hash' (string, not null), 'created_at', and 'updated_at'. Use a database migration tool like Alembic or Flyway to script and apply this schema change.\n<info added on 2025-08-28T00:25:11.284Z>\nThe 'users' table has been defined and migrated. The schema includes 'id' (UUID, Primary Key), 'email' (VARCHAR, Unique, Not Null), 'password_hash' (VARCHAR, Not Null), 'role' (ENUM: admin, coordinator, common), 'created_at' (Timestamp), and 'updated_at' (Timestamp with automatic trigger). The database migration script is `src/lib/migrations/001_create_users_table.sql` with a corresponding rollback script. Indices `idx_users_email` and `idx_users_role` have been created. The development environment is fully configured with Next.js, Supabase, Tailwind CSS, bcryptjs, jsonwebtoken, and zod.\n</info added on 2025-08-28T00:25:11.284Z>",
+            "status": "done",
+            "testStrategy": "Run the migration and verify the 'users' table is created with the correct columns, types, and constraints in a test database. Write a rollback script and test that it correctly removes the table."
+          },
+          {
+            "id": 2,
+            "title": "Develop User Registration API Endpoint",
+            "description": "Implement the backend endpoint (e.g., POST /api/auth/register) that allows new users to create an account.",
+            "dependencies": [],
+            "details": "The endpoint should accept an email and password. It must validate the input (e.g., valid email format, password complexity), check if the email is already in use, hash the password using bcrypt, and store the new user record in the database. Return a 201 Created status on success.",
+            "status": "done",
+            "testStrategy": "Write integration tests to cover: 1) Successful user creation. 2) Attempted registration with a duplicate email (should fail with 409 Conflict). 3) Registration with invalid input (e.g., bad email format, short password) (should fail with 400 Bad Request). Verify password in DB is hashed."
+          },
+          {
+            "id": 3,
+            "title": "Develop User Login API Endpoint and JWT Generation",
+            "description": "Implement the backend endpoint (e.g., POST /api/auth/login) for authenticating users and issuing a JSON Web Token (JWT).",
+            "dependencies": [],
+            "details": "The endpoint should accept an email and password. It will retrieve the user by email, compare the provided password against the stored hash using bcrypt. If credentials are valid, generate a signed JWT containing the user's ID and an expiration date. Return the JWT in the response body.",
+            "status": "done",
+            "testStrategy": "Write integration tests for: 1) Successful login with correct credentials, verifying a valid JWT is returned. 2) Failed login with an incorrect password (should return 401 Unauthorized). 3) Failed login for a non-existent user (should return 401 Unauthorized)."
+          },
+          {
+            "id": 4,
+            "title": "Create Authentication Middleware for Protected Routes",
+            "description": "Develop middleware to verify the JWT on incoming requests to secure specific API endpoints.",
+            "dependencies": [],
+            "details": "The middleware should extract the JWT from the 'Authorization: Bearer <token>' header. It must verify the token's signature and check for expiration. If valid, decode the payload and attach the user's identity to the request context for use in protected route handlers. If invalid, it must return a 401 Unauthorized response.",
+            "status": "done",
+            "testStrategy": "Create a sample protected endpoint. Write tests to: 1) Access the endpoint with a valid token (should succeed). 2) Access with no token (should fail with 401). 3) Access with an invalid or expired token (should fail with 401)."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Authentication and User Management",
+        "description": "Implement user authentication (login/password) and role-based access control for Admin, Coordinator, and Common User profiles.",
+        "details": "Integrate Supabase Auth, define user roles and permissions, implement secure login/logout flows, route protection based on roles, and session expiration after inactivity.",
+        "testStrategy": "Test login/logout for each user role. Verify that users can only access authorized routes. Confirm session expiration works as expected.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Collaborator Registration Module",
+        "description": "Develop CRUD functionalities for managing collaborator data, including personal, contact, and banking information.",
+        "details": "Design the database schema for collaborators. Implement forms for creating, viewing, editing, and deleting collaborator records. Ensure data validation for all fields (e.g., CPF, banking details).",
+        "testStrategy": "Perform full CRUD operations for multiple collaborator records. Verify data integrity, correct display of information, and proper handling of invalid inputs.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "School/Location Registration Module",
+        "description": "Develop CRUD functionalities for managing exam location data, including address, contacts, structure, and room capacity.",
+        "details": "Design the database schema for schools/locations. Implement forms for creating, viewing, editing, and deleting location records. Include fields for address, contact information, and room capacity based on furniture type.",
+        "testStrategy": "Perform full CRUD operations for multiple location records. Verify data accuracy, especially for capacity calculations if any logic is involved.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Core UI/UX and Responsive Design",
+        "description": "Implement the application's responsive design and develop the main navigation structure (side menu) for intuitive user experience.",
+        "details": "Apply responsive design principles using the chosen UI libraries to ensure optimal display on desktops, tablets, and mobile devices. Build a consistent side menu for navigation across modules.",
+        "testStrategy": "Test the application's layout and navigation on various screen sizes and orientations. Ensure all interactive elements are accessible and usable on different devices.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Competition/Event Registration Module",
+        "description": "Develop CRUD functionalities for creating and managing competition/event details, including name, date, associated organizing board, and expected registrations.",
+        "details": "Design the database schema for events. Implement forms for creating, viewing, editing, and deleting event records. Allow linking to an organizing board.",
+        "testStrategy": "Perform full CRUD operations for multiple event records. Verify that event details are correctly stored and displayed.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3,
+          4
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Collaborator Allocation Tool",
+        "description": "Implement a tool to assign collaborators to specific locations and functions for each competition, with alerts to prevent double allocation.",
+        "details": "Develop a user interface for assigning collaborators. Implement backend logic to manage assignments and validate against double allocation, providing clear alerts to the user.",
+        "testStrategy": "Test various allocation scenarios, including attempts to double-allocate a collaborator. Verify that alerts are triggered correctly and assignments are accurately recorded.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4,
+          6
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Attendance Confirmation Screen",
+        "description": "Develop a post-event screen for coordinators to manually mark 'Present' or 'Absent' status for collaborators based on physical attendance lists.",
+        "details": "Create a user interface that lists allocated collaborators for an event and allows coordinators to easily toggle their attendance status. Update the database with the confirmed attendance.",
+        "testStrategy": "Test marking attendance for various collaborators (Present/Absent). Verify that the status updates are correctly saved and reflected in the system.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Payment Value Configuration",
+        "description": "Implement functionality for coordinators to configure the cost assistance table for each function (e.g., Fiscal, Support) within each event registration.",
+        "details": "Develop a user interface within the event registration module that allows defining specific payment rates per function for that particular event. Store these configurations in the database.",
+        "testStrategy": "Test setting different payment values for various functions within multiple events. Verify that the configurations are saved correctly and can be retrieved.",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Automated Payment Calculation Logic",
+        "description": "Develop the backend logic to automatically calculate collaborator payments by cross-referencing allocation information, confirmed attendance, and event value tables.",
+        "details": "Implement an algorithm that retrieves collaborator allocations, checks their attendance status, and applies the configured payment values per function to calculate the total amount due to each collaborator.",
+        "testStrategy": "Provide a diverse set of test data (allocations, attendance, payment configurations) and verify that the calculated payment amounts match manual calculations precisely.",
+        "priority": "high",
+        "dependencies": [
+          7,
+          8,
+          9
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Financial Report Generation",
+        "description": "Implement the 'Collaborator Payment History' report, detailing collaborator name, CPF, Pix key, total amount to receive, and breakdown by event.",
+        "details": "Develop a user interface for generating the report. Implement data retrieval and formatting to present the required financial details clearly. Ensure the report is exportable (e.g., PDF, CSV).",
+        "testStrategy": "Generate reports for various time periods and collaborator groups. Verify the accuracy of all data points (amounts, breakdowns, personal info) against source data.",
+        "priority": "high",
+        "dependencies": [
+          10
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Official Document Management (Simplified)",
+        "description": "Develop functionality to generate individual official documents for public agencies using pre-defined templates with status control (Pending, Sent, Received).",
+        "details": "Implement a module that allows selecting a template, merging relevant data from the system (e.g., collaborator details, event info), generating the document, and tracking its status.",
+        "testStrategy": "Generate several types of documents using different templates. Verify that data is correctly merged into the templates and that document status can be updated and tracked.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          6
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Security and Compliance Implementation",
+        "description": "Implement audit logging for critical actions to ensure traceability and ensure LGPD compliance for proper handling of sensitive personal data.",
+        "details": "Set up a robust audit logging mechanism for all critical CRUD operations and user actions. Review and implement data handling practices to comply with LGPD, including data encryption/anonymization where necessary.",
+        "testStrategy": "Verify that audit logs are generated for all specified critical actions. Conduct a security review to ensure sensitive data is handled according to LGPD guidelines.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3,
+          4,
+          6
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Performance Optimization",
+        "description": "Optimize the system to support up to 50 simultaneous users without noticeable performance degradation and ensure fast financial report generation.",
+        "details": "Identify and optimize performance bottlenecks, including database queries (indexing), API response times, and frontend rendering. Conduct load testing to validate performance under stress.",
+        "testStrategy": "Perform load tests simulating 50 concurrent users. Measure response times for critical operations and report generation. Identify and resolve any performance degradation.",
+        "priority": "medium",
+        "dependencies": [
+          10,
+          11
+        ],
+        "status": "not_started",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Data Migration Tool Development",
+        "description": "Develop a robust tool for data import and cleansing from existing sources (e.g., spreadsheets) into the new system.",
+        "details": "Create a script or a simple UI for importing existing collaborator, school/location, and event data. Include data validation and cleansing rules to ensure data quality during migration.",
+        "testStrategy": "Test the migration tool with various datasets, including 'dirty' data, to ensure proper cleansing and successful import into the new database schemas. Verify data integrity post-migration.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          4,
+          6
+        ],
+        "status": "not_started",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-28T00:01:39.743Z",
+      "updated": "2025-08-28T14:48:40.988Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
