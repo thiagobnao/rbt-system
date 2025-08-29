@@ -190,35 +190,91 @@
         "id": 4,
         "title": "School/Location Registration Module",
         "description": "Develop CRUD functionalities for managing exam location data, including address, contacts, structure, and room capacity.",
-        "details": "Design the database schema for schools/locations. Implement forms for creating, viewing, editing, and deleting location records. Include fields for address, contact information, and room capacity based on furniture type.",
-        "testStrategy": "Perform full CRUD operations for multiple location records. Verify data accuracy, especially for capacity calculations if any logic is involved.",
+        "details": "Create a Supabase migration for the `locations` table. Define TypeScript types in `src/lib/types/` and Zod validation schemas in `src/lib/validations/`. Develop a data service in `src/lib/services/` to handle all CRUD operations. Implement the UI using Next.js App Router, creating forms with Shadcn/UI components, React Hook Form, and Zod for validation. Include fields for address, contact info, structure, and room capacity.",
+        "testStrategy": "Perform full CRUD operations. Verify that Zod validations work correctly on both client and server. Test the data service layer independently. Confirm data integrity in the Supabase table. Verify UI responsiveness and form behavior, including error messages.",
         "priority": "high",
         "dependencies": [
           1,
           2
         ],
         "status": "not_started",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define `locations` Table Schema, Types, and Validation",
+            "description": "Create the Supabase database migration for the `locations` table. Define the corresponding TypeScript types in `src/lib/types/locations.ts` and Zod validation schemas in `src/lib/validations/locations.ts`.",
+            "dependencies": [],
+            "details": "The `locations` table schema should include columns for a unique ID, address details (street, city, state, zip code), contact person (name, email, phone), building structure notes, and room capacity. The Zod schema will enforce validation rules for these fields, such as required fields and correct data formats (e.g., email, phone number).",
+            "status": "pending",
+            "testStrategy": "Review the migration script to ensure it matches the required schema. Run the migration against a local Supabase instance. Verify that the TypeScript types and Zod schema accurately reflect the table structure and validation requirements."
+          },
+          {
+            "id": 2,
+            "title": "Develop `locations` Data Service Layer",
+            "description": "Implement a data service in `src/lib/services/locations.service.ts` to encapsulate all CRUD (Create, Read, Update, Delete) operations for the `locations` table.",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Create functions like `createLocation`, `getLocationById`, `getAllLocations`, `updateLocation`, and `deleteLocation`. These functions will use the Supabase client to interact with the database and will be strongly typed using the types defined in the previous subtask. The service will handle data transformation and error handling between the database and the application logic.",
+            "status": "pending",
+            "testStrategy": "Write unit or integration tests for the service layer. Test each CRUD function independently to ensure it correctly interacts with the Supabase database, handles expected inputs, and gracefully manages potential errors (e.g., record not found on update/delete)."
+          },
+          {
+            "id": 3,
+            "title": "Implement UI for Listing and Viewing Locations",
+            "description": "Create Next.js App Router pages to display a list of all locations in a table and to view the details of a single location.",
+            "dependencies": [
+              "4.2"
+            ],
+            "details": "Develop a page at `/dashboard/locations` that uses the data service to fetch and display all locations in a Shadcn/UI `Table`. The table should include key information and a link to a dynamic route `/dashboard/locations/[id]`, which will display all details for the selected location. This part of the UI is read-only.",
+            "status": "pending",
+            "testStrategy": "Navigate to the locations list page and verify all locations are displayed correctly in the table. Click on a location to go to its details page and confirm all data fields are rendered accurately. Test the behavior with an empty list of locations to ensure a user-friendly message is shown."
+          },
+          {
+            "id": 4,
+            "title": "Implement Create and Update Location Form",
+            "description": "Develop a reusable form component for creating and editing location data using Shadcn/UI components, React Hook Form, and the Zod schema for validation.",
+            "dependencies": [
+              "4.1",
+              "4.2"
+            ],
+            "details": "Create a form component that can be used on both a `/dashboard/locations/new` page and a `/dashboard/locations/[id]/edit` page. The form will have fields for address, contact info, structure, and room capacity. Integrate the Zod schema with React Hook Form for client-side validation. Use a Server Action to process form submissions, calling the `createLocation` or `updateLocation` service functions.",
+            "status": "pending",
+            "testStrategy": "Test the form in both 'create' and 'edit' modes. Verify that client-side validation provides immediate feedback for invalid inputs. Submit a valid form and confirm the data is correctly saved or updated in the database. Test submitting the form with invalid data to ensure server-side validation also prevents the operation."
+          },
+          {
+            "id": 5,
+            "title": "Implement Location Deletion Functionality",
+            "description": "Add the functionality to delete a location from the system, including a user-friendly confirmation step to prevent accidental deletion.",
+            "dependencies": [
+              "4.2",
+              "4.3"
+            ],
+            "details": "Add a 'Delete' button to the location details page or as an action in the locations list table. Clicking the button will trigger a Shadcn/UI `AlertDialog` to ask for user confirmation. Upon confirmation, a Server Action will call the `deleteLocation` function from the data service. Provide feedback to the user via a toast notification on success or failure.",
+            "status": "pending",
+            "testStrategy": "Attempt to delete a location. Verify the confirmation dialog appears. First, cancel the deletion and confirm the data is not deleted. Second, confirm the deletion and verify the location is removed from the UI list and the Supabase table. Check for any cascading effects or constraints if applicable."
+          }
+        ]
       },
       {
         "id": 5,
-        "title": "Core UI/UX and Responsive Design",
-        "description": "Implement the application's responsive design and develop the main navigation structure (side menu) for intuitive user experience.",
-        "details": "Apply responsive design principles using the chosen UI libraries to ensure optimal display on desktops, tablets, and mobile devices. Build a consistent side menu for navigation across modules.",
-        "testStrategy": "Test the application's layout and navigation on various screen sizes and orientations. Ensure all interactive elements are accessible and usable on different devices.",
-        "priority": "medium",
+        "title": "Core UI/UX and Responsive Design Implementation",
+        "description": "Implement the application's core UI/UX, responsive design, and main navigation structure, leveraging the design system and components developed under the 'frontend-design' tag and based on the processed front-end PRD.",
+        "status": "not_started",
         "dependencies": [
           1
         ],
-        "status": "not_started",
+        "priority": "medium",
+        "details": "Implement the application's main UI shell using Next.js App Router, including a fixed left sidebar and top header. Develop the main navigation system with section grouping. Ensure the layout is fully responsive using Tailwind CSS breakpoints. Leverage the existing, functional Shadcn/UI component library. All new forms should follow the established pattern of using React Hook Form with Zod schemas from `src/lib/validations/`. Implement a global feedback system using Shadcn/UI's toast and modal components.",
+        "testStrategy": "Verify the layout and navigation across all defined breakpoints (desktop, tablet, mobile). Test the functionality of the fixed sidebar and top header. Confirm that all interactive UI elements built with Shadcn/UI are accessible and function correctly. Test form submissions and validations to ensure the React Hook Form/Zod integration is robust.",
         "subtasks": []
       },
       {
         "id": 6,
         "title": "Competition/Event Registration Module",
         "description": "Develop CRUD functionalities for creating and managing competition/event details, including name, date, associated organizing board, and expected registrations.",
-        "details": "Design the database schema for events. Implement forms for creating, viewing, editing, and deleting event records. Allow linking to an organizing board.",
-        "testStrategy": "Perform full CRUD operations for multiple event records. Verify that event details are correctly stored and displayed.",
+        "details": "Create a Supabase migration for the `events` table. Define TypeScript types in `src/lib/types/` and Zod validation schemas in `src/lib/validations/`. Develop a service in `src/lib/services/` for event CRUD operations. Implement the UI within the Next.js App Router, using Shadcn/UI components, React Hook Form, and Zod for forms. Include functionality to link events to an organizing board.",
+        "testStrategy": "Perform full CRUD operations. Verify client and server-side validation using Zod. Test the event service layer. Confirm data is correctly stored and retrieved from the Supabase table, including the link to the organizing board. Test the UI for usability and responsiveness.",
         "priority": "high",
         "dependencies": [
           2,
@@ -226,14 +282,71 @@
           4
         ],
         "status": "not_started",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Event Schema, Types, and Validations",
+            "description": "Create the Supabase database migration for the `events` table. Define the corresponding TypeScript types in `src/lib/types/` and create Zod schemas in `src/lib/validations/` for data validation.",
+            "dependencies": [],
+            "details": "The `events` table schema should include fields for name, date, expected registrations, and a foreign key to the organizing board. The TypeScript type `Event` and the Zod schema `eventSchema` must reflect this structure and will be used for both client and server-side validation.",
+            "status": "pending",
+            "testStrategy": "Verify the migration runs successfully against the Supabase database. Manually inspect the created table schema. Check that the TypeScript types and Zod schema are syntactically correct and align with the database structure."
+          },
+          {
+            "id": 2,
+            "title": "Develop Event Service for CRUD Operations",
+            "description": "Implement a service module in `src/lib/services/` to handle all business logic for event CRUD (Create, Read, Update, Delete) operations.",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Create an `eventService.ts` file containing functions like `createEvent`, `getEventById`, `updateEvent`, `deleteEvent`, and `listEvents`. These functions will interact with the Supabase client and use the Zod schema for server-side data validation before database transactions.",
+            "status": "pending",
+            "testStrategy": "Test each CRUD function in the service layer independently to ensure it correctly interacts with the Supabase database and properly handles valid and invalid data based on the Zod schema."
+          },
+          {
+            "id": 3,
+            "title": "Implement Event Creation and Editing Form",
+            "description": "Develop the user interface for creating and editing events using a form built with Shadcn/UI components, React Hook Form, and Zod for client-side validation.",
+            "dependencies": [
+              "6.1",
+              "6.2"
+            ],
+            "details": "Create a reusable form component that can be used for both creating new events and editing existing ones. The form should include fields for name, date, expected registrations, and a dropdown/select to link to an existing organizing board. The list of organizing boards will be fetched using a relevant service.",
+            "status": "pending",
+            "testStrategy": "Test the form's UI for responsiveness and usability. Verify that client-side validation works correctly, displaying appropriate error messages for invalid input. Test form submission for both create and edit modes, ensuring data is passed correctly."
+          },
+          {
+            "id": 4,
+            "title": "Implement Event List and Detail View Pages",
+            "description": "Create pages within the Next.js App Router to display a list of all events and to view the details of a single selected event.",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "Develop a page at `/events` to show a table of all events, with options to edit or delete each one. Create a dynamic route page at `/events/[id]` to display the complete details of a specific event. These pages will fetch data using the event service.",
+            "status": "pending",
+            "testStrategy": "Verify that the event list page correctly fetches and displays all events. Test that navigation links to edit and view details work. Confirm that the detail page displays all information accurately for a given event."
+          },
+          {
+            "id": 5,
+            "title": "Integrate UI with Backend via Server Actions",
+            "description": "Connect the UI components to the backend logic by implementing Next.js Server Actions that utilize the event service for a complete end-to-end CRUD flow.",
+            "dependencies": [
+              "6.2",
+              "6.3",
+              "6.4"
+            ],
+            "details": "Create the necessary Server Actions to handle form submissions (create/update) and deletions. Wire up the form from subtask 6.3 and the action buttons from subtask 6.4 to these actions. Ensure the entire CRUD flow is functional from the user interface to the database, including optimistic UI updates where appropriate.",
+            "status": "pending",
+            "testStrategy": "Perform end-to-end testing of the full CRUD cycle. Create an event via the UI, verify it appears in the list and can be viewed. Update the event and confirm the changes. Delete the event and ensure it is removed from the list and database."
+          }
+        ]
       },
       {
         "id": 7,
         "title": "Collaborator Allocation Tool",
         "description": "Implement a tool to assign collaborators to specific locations and functions for each competition, with alerts to prevent double allocation.",
-        "details": "Develop a user interface for assigning collaborators. Implement backend logic to manage assignments and validate against double allocation, providing clear alerts to the user.",
-        "testStrategy": "Test various allocation scenarios, including attempts to double-allocate a collaborator. Verify that alerts are triggered correctly and assignments are accurately recorded.",
+        "details": "Develop the UI for allocating collaborators using Shadcn/UI components (e.g., tables, selects, dialogs). Create a Supabase migration for the `allocations` table. Define types and Zod schemas in `src/lib/`. Implement the allocation logic within a dedicated service in `src/lib/services/`, which will handle assignments and include validation to prevent double allocation. Use Server Actions to process the allocation requests, providing clear feedback (success/error) to the user via toasts.",
+        "testStrategy": "Test the allocation UI with various scenarios, including assigning, re-assigning, and un-assigning collaborators. Specifically test the double-allocation prevention logic and verify that clear, user-friendly error alerts are displayed. Check the `allocations` table in Supabase to confirm data accuracy.",
         "priority": "high",
         "dependencies": [
           3,
@@ -247,8 +360,8 @@
         "id": 8,
         "title": "Attendance Confirmation Screen",
         "description": "Develop a post-event screen for coordinators to manually mark 'Present' or 'Absent' status for collaborators based on physical attendance lists.",
-        "details": "Create a user interface that lists allocated collaborators for an event and allows coordinators to easily toggle their attendance status. Update the database with the confirmed attendance.",
-        "testStrategy": "Test marking attendance for various collaborators (Present/Absent). Verify that the status updates are correctly saved and reflected in the system.",
+        "details": "Develop a screen using Next.js App Router that fetches and displays allocated collaborators for a selected event, likely using a Shadcn/UI data table. Implement UI controls (e.g., switches, buttons) to mark attendance ('Present'/'Absent'). Use a service from `src/lib/services/` and a Server Action to update the attendance status in the Supabase database.",
+        "testStrategy": "Test the UI for marking attendance for multiple collaborators. Verify that status changes are correctly persisted in the Supabase database and that the UI updates accordingly upon refresh or confirmation. Test with a large list of collaborators to check for UI performance.",
         "priority": "medium",
         "dependencies": [
           7
@@ -260,8 +373,8 @@
         "id": 9,
         "title": "Payment Value Configuration",
         "description": "Implement functionality for coordinators to configure the cost assistance table for each function (e.g., Fiscal, Support) within each event registration.",
-        "details": "Develop a user interface within the event registration module that allows defining specific payment rates per function for that particular event. Store these configurations in the database.",
-        "testStrategy": "Test setting different payment values for various functions within multiple events. Verify that the configurations are saved correctly and can be retrieved.",
+        "details": "Extend the Competition/Event module with a UI for configuring payment values per function. Use Shadcn/UI components for the interface. Create a Supabase migration for a `payment_configurations` table. Define corresponding types and Zod schemas. Implement a service in `src/lib/services/` to manage these configurations, linking them to specific events.",
+        "testStrategy": "Test creating, updating, and deleting payment configurations for different functions within an event. Verify that the data is correctly saved in Supabase and associated with the correct event. Confirm that the UI correctly retrieves and displays existing configurations when editing an event.",
         "priority": "high",
         "dependencies": [
           6
@@ -273,8 +386,8 @@
         "id": 10,
         "title": "Automated Payment Calculation Logic",
         "description": "Develop the backend logic to automatically calculate collaborator payments by cross-referencing allocation information, confirmed attendance, and event value tables.",
-        "details": "Implement an algorithm that retrieves collaborator allocations, checks their attendance status, and applies the configured payment values per function to calculate the total amount due to each collaborator.",
-        "testStrategy": "Provide a diverse set of test data (allocations, attendance, payment configurations) and verify that the calculated payment amounts match manual calculations precisely.",
+        "details": "Develop a service in `src/lib/services/` or a Supabase Edge Function to implement the payment calculation logic. This logic must join data from `allocations`, `attendance`, and `payment_configurations` tables. The function should take an event ID as input and return the calculated payment for each collaborator who attended.",
+        "testStrategy": "Create a suite of unit tests for the calculation service/function. Use a diverse set of mock data covering various scenarios (e.g., different functions, absentees, multiple events). Verify that the calculated payment amounts are precise and match expected results from manual calculations.",
         "priority": "high",
         "dependencies": [
           7,
@@ -288,8 +401,8 @@
         "id": 11,
         "title": "Financial Report Generation",
         "description": "Implement the 'Collaborator Payment History' report, detailing collaborator name, CPF, Pix key, total amount to receive, and breakdown by event.",
-        "details": "Develop a user interface for generating the report. Implement data retrieval and formatting to present the required financial details clearly. Ensure the report is exportable (e.g., PDF, CSV).",
-        "testStrategy": "Generate reports for various time periods and collaborator groups. Verify the accuracy of all data points (amounts, breakdowns, personal info) against source data.",
+        "details": "Create a new page in the Next.js App Router for financial reports. The UI should allow filtering by date range or event. Use the payment calculation service (Task 10) to fetch the data. Display the results in a Shadcn/UI data table. Implement export functionality (e.g., to CSV using a library like `papaparse`).",
+        "testStrategy": "Generate reports using various filters. Verify the accuracy of the displayed and exported data against the source data in Supabase. Test the CSV export functionality to ensure the file is correctly formatted and contains the right data.",
         "priority": "high",
         "dependencies": [
           10
@@ -301,8 +414,8 @@
         "id": 12,
         "title": "Official Document Management (Simplified)",
         "description": "Develop functionality to generate individual official documents for public agencies using pre-defined templates with status control (Pending, Sent, Received).",
-        "details": "Implement a module that allows selecting a template, merging relevant data from the system (e.g., collaborator details, event info), generating the document, and tracking its status.",
-        "testStrategy": "Generate several types of documents using different templates. Verify that data is correctly merged into the templates and that document status can be updated and tracked.",
+        "details": "Develop a module for document generation. Create a Supabase migration for a `documents` table to track status (Pending, Sent, Received). The UI, built with Shadcn/UI, will allow users to select a template and an event/collaborator. Use a service to fetch the necessary data and a Server Action to trigger document generation (e.g., using a library like `pdf-lib` for PDFs) and update its status.",
+        "testStrategy": "Test the generation of documents for different templates and data sets. Verify that the data is correctly merged into the final document. Test the full lifecycle of a document's status (Pending -> Sent -> Received) and confirm the changes are persisted in the Supabase table.",
         "priority": "medium",
         "dependencies": [
           3,
@@ -315,8 +428,8 @@
         "id": 13,
         "title": "Security and Compliance Implementation",
         "description": "Implement audit logging for critical actions to ensure traceability and ensure LGPD compliance for proper handling of sensitive personal data.",
-        "details": "Set up a robust audit logging mechanism for all critical CRUD operations and user actions. Review and implement data handling practices to comply with LGPD, including data encryption/anonymization where necessary.",
-        "testStrategy": "Verify that audit logs are generated for all specified critical actions. Conduct a security review to ensure sensitive data is handled according to LGPD guidelines.",
+        "details": "Implement audit logging using Supabase Triggers or by extending the data services in `src/lib/services/` to log critical actions (Create, Update, Delete) to an `audit_log` table. The log should include who, what, and when. Review all services handling sensitive personal data (PII) to ensure compliance with LGPD, leveraging Supabase's security features. Ensure Role-Based Access Control (RBAC) is strictly enforced at the data layer using Supabase Row Level Security (RLS) policies.",
+        "testStrategy": "Perform critical CRUD actions and verify that corresponding entries are created in the `audit_log` table. Write tests to attempt unauthorized data access by different user roles and confirm that Supabase RLS policies correctly block these attempts. Conduct a review of data handling for PII.",
         "priority": "high",
         "dependencies": [
           2,
@@ -331,8 +444,8 @@
         "id": 14,
         "title": "Performance Optimization",
         "description": "Optimize the system to support up to 50 simultaneous users without noticeable performance degradation and ensure fast financial report generation.",
-        "details": "Identify and optimize performance bottlenecks, including database queries (indexing), API response times, and frontend rendering. Conduct load testing to validate performance under stress.",
-        "testStrategy": "Perform load tests simulating 50 concurrent users. Measure response times for critical operations and report generation. Identify and resolve any performance degradation.",
+        "details": "Analyze and optimize complex Supabase queries, particularly for reporting (Task 11) and allocation (Task 7), by adding necessary database indexes. Use Next.js dynamic rendering and caching strategies where appropriate. Profile frontend component rendering to identify and fix bottlenecks. Conduct load testing using a tool like k6 to simulate 50 concurrent users on critical API routes and Server Actions.",
+        "testStrategy": "Use `supabase explain` to analyze query plans for critical operations. Run load tests simulating 50 concurrent users and measure p95/p99 response times for key endpoints. Profile frontend rendering performance using browser dev tools, especially for pages with large data tables.",
         "priority": "medium",
         "dependencies": [
           10,
@@ -345,8 +458,8 @@
         "id": 15,
         "title": "Data Migration Tool Development",
         "description": "Develop a robust tool for data import and cleansing from existing sources (e.g., spreadsheets) into the new system.",
-        "details": "Create a script or a simple UI for importing existing collaborator, school/location, and event data. Include data validation and cleansing rules to ensure data quality during migration.",
-        "testStrategy": "Test the migration tool with various datasets, including 'dirty' data, to ensure proper cleansing and successful import into the new database schemas. Verify data integrity post-migration.",
+        "details": "Develop a Node.js or Deno script for data migration. The script should read data from source files (e.g., CSV, JSON). Use the Zod schemas defined in `src/lib/validations/` to validate and cleanse the incoming data before inserting it into the Supabase database using the Supabase client library. The script should provide clear logging of successes, failures, and data transformations.",
+        "testStrategy": "Test the migration script with sample data files, including ones with missing fields, incorrect data types, and other inconsistencies ('dirty' data). Verify that the Zod validation and cleansing logic works as expected. After running the script, query the Supabase database to confirm data integrity and correctness.",
         "priority": "medium",
         "dependencies": [
           3,
@@ -361,6 +474,250 @@
       "created": "2025-08-28T00:01:39.743Z",
       "updated": "2025-08-28T18:05:20.246Z",
       "description": "Tasks for master context"
+    }
+  },
+  "frontend-design": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Frontend Libraries Refinement and Design System Enhancement",
+        "description": "Refine and enhance existing core frontend dependencies to align with the evolving design system, focusing on improving the Shadcn/UI component library, robust form management, and optimized styling configurations.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "high",
+        "details": "This task involves a comprehensive evolution and improvement of existing frontend libraries and configurations. Key activities include:\n1. Updating all existing frontend dependencies to their latest stable versions to ensure compatibility and leverage new features.\n2. Enhancing and extending the existing Shadcn/UI component library, focusing on improving current configurations, adding new components, and ensuring full alignment with the evolving design system.\n3. Implementing and configuring React Hook Form with Zod for robust form management and validation, integrating it more deeply across the application to replace any manual validation logic.\n4. Improving the existing Tailwind CSS configuration to better support and reflect the design system's tokens and styles, optimizing for consistency and maintainability.",
+        "testStrategy": "Verify the stability and compatibility of all updated dependencies. Confirm that all enhanced Shadcn/UI components render correctly, are accessible, and adhere to the evolving design system's specifications. Test a sample form to ensure React Hook Form and Zod handle validation and submission as expected. Validate that the improved Tailwind CSS configuration correctly applies the design system's styles across the application.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update Core Frontend Dependencies to Latest Stable Versions",
+            "description": "Audit and update all frontend dependencies listed in package.json to their latest stable versions to ensure security, compatibility, and access to new features.",
+            "dependencies": [],
+            "details": "Perform a comprehensive audit of all dependencies using `npm outdated`. Sequentially update major libraries like React, Next.js, and others, addressing any breaking changes or peer dependency conflicts. Document significant changes and migration steps required for each major version bump.\n<info added on 2025-08-29T20:02:36.352Z>\n**Análise de Dependências Desatualizadas - 2025-01-28**\n\nRealizei uma auditoria completa das dependências usando `npm outdated` e identifiquei as seguintes atualizações necessárias:\n\n**Dependências com Atualizações Disponíveis:**\n\n1. **@supabase/auth-helpers-nextjs**: 0.9.0 → 0.10.0 (patch)\n2. **@supabase/supabase-js**: 2.56.0 → 2.56.1 (patch)\n3. **@types/node**: 20.19.11 → 24.3.0 (major - Node.js 24)\n4. **@types/react**: 18.3.24 → 19.1.12 (major - React 19)\n5. **@types/react-dom**: 18.3.7 → 19.1.9 (major - React 19)\n6. **bcryptjs**: 2.4.3 → 3.0.2 (major)\n7. **eslint**: 8.57.1 → 9.34.0 (major)\n8. **react**: 18.3.1 → 19.1.1 (major - React 19)\n9. **react-dom**: 18.3.1 → 19.1.1 (major - React 19)\n10. **tailwindcss**: 3.4.17 → 4.1.12 (major - Tailwind CSS 4)\n11. **zod**: 3.25.76 → 4.1.5 (major)\n\n**Estratégia de Atualização:**\n- Começar com atualizações de patch (menor risco)\n- Seguir com atualizações major em ordem de dependência\n- Testar cada atualização antes de prosseguir\n- Documentar breaking changes e migrações necessárias\n</info added on 2025-08-29T20:02:36.352Z>\n<info added on 2025-08-29T20:04:03.202Z>\n<info added on 2025-08-29T20:05:00.000Z>\n**Progresso da Atualização - 2025-01-28**\n\n✅ **Atualizações de Patch Concluídas:**\n- @supabase/auth-helpers-nextjs: 0.9.0 → 0.10.0\n- @supabase/supabase-js: 2.56.0 → 2.56.1\n\n**Teste de Build:** ✅ Sucesso\n- Build executado com sucesso após atualizações\n- Apenas 1 warning sobre useEffect dependency (não relacionado às atualizações)\n- Todas as páginas compiladas corretamente\n\n**Próximos Passos:**\n- Atualizar dependências major em ordem de prioridade\n- Começar com bcryptjs (menor impacto)\n- Seguir com React 19 e suas dependências\n- Finalizar com Tailwind CSS 4 e Zod 4\n</info added on 2025-08-29T20:05:00.000Z>\n</info added on 2025-08-29T20:04:03.202Z>\n<info added on 2025-08-29T20:05:01.061Z>\n**Progresso da Atualização - Continuação - 2025-01-28**\n\n✅ **bcryptjs Atualizado:**\n- bcryptjs: 2.4.3 → 3.0.2 (major)\n- Build testado com sucesso\n- Sem breaking changes detectados\n\n**Próxima Atualização: Zod**\n- Zod: 3.25.76 → 4.1.5 (major)\n- Importante para validação de formulários\n- Verificar breaking changes na API\n</info added on 2025-08-29T20:05:01.061Z>\n<info added on 2025-08-29T20:05:58.201Z>\n**Progresso da Atualização - Continuação - 2025-01-28**\n\n✅ **Zod Atualizado:**\n- Zod: 3.25.76 → 4.1.5 (major)\n- Build testado com sucesso\n- Sem breaking changes detectados\n\n**Próxima Atualização: ESLint**\n- ESLint: 8.57.1 → 9.34.0 (major)\n- Verificar configurações e regras\n- Possível necessidade de ajustes no .eslintrc\"\n</info added on 2025-08-29T20:05:58.201Z>\n<info added on 2025-08-29T20:07:06.194Z>\n**Progresso da Atualização - Continuação - 2025-01-28**\n\n✅ **ESLint Atualizado:**\n- ESLint: 8.57.1 → 9.34.0 (major)\n- Build testado com sucesso\n- Sem breaking changes detectados\n\n**Próxima Atualização: React 19**\n- React: 18.3.1 → 19.1.1 (major)\n- React DOM: 18.3.1 → 19.1.1 (major)\n- @types/react: 18.3.24 → 19.1.12 (major)\n- @types/react-dom: 18.3.7 → 19.1.9 (major)\n- **ATENÇÃO:** Esta é uma atualização major que pode ter breaking changes\n</info added on 2025-08-29T20:07:06.194Z>\n<info added on 2025-08-29T20:07:56.947Z>\n**Progresso da Atualização - Continuação - 2025-01-28**\n\n✅ **React 19 Atualizado:**\n- React: 18.3.1 → 19.1.1 (major)\n- React DOM: 18.3.1 → 19.1.1 (major)\n- @types/react: 18.3.24 → 19.1.12 (major)\n- @types/react-dom: 18.3.7 → 19.1.9 (major)\n- Build testado com sucesso\n- Warnings sobre peer dependencies (esperado para atualização major)\n- Sem breaking changes críticos detectados\n\n**Próxima Atualização: Tailwind CSS 4**\n- Tailwind CSS: 3.4.17 → 4.1.12 (major)\n- **ATENÇÃO:** Tailwind CSS 4 tem mudanças significativas na configuração\n</info added on 2025-08-29T20:07:56.947Z>\n<info added on 2025-08-29T20:10:55.787Z>\n<info added on 2025-08-29T20:08:56.947Z>\n**Progresso Final da Atualização - 2025-01-28**\n\n✅ **Todas as Atualizações Concluídas com Sucesso:**\n\n**Atualizações de Patch:**\n- @supabase/auth-helpers-nextjs: 0.9.0 → 0.10.0\n- @supabase/supabase-js: 2.56.0 → 2.56.1\n\n**Atualizações Major:**\n- bcryptjs: 2.4.3 → 3.0.2\n- zod: 3.25.76 → 4.1.5\n- eslint: 8.57.1 → 9.34.0\n- React: 18.3.1 → 19.1.1\n- React DOM: 18.3.1 → 19.1.1\n- @types/react: 18.3.24 → 19.1.12\n- @types/react-dom: 18.3.7 → 19.1.9\n- Tailwind CSS: 3.4.17 → 4.1.12\n\n**Configurações Atualizadas:**\n- PostCSS: Adicionado @tailwindcss/postcss\n- Tailwind config: Corrigido darkMode para \"class\"\n- globals.css: Adicionado @reference \"tailwindcss\"\n\n**Teste Final:** ✅ Build bem-sucedido\n- Todas as dependências atualizadas\n- Aplicação compilando corretamente\n- Apenas warnings menores (não críticos)\n\n**Breaking Changes Resolvidos:**\n- Tailwind CSS 4: Plugin PostCSS separado\n- React 19: Peer dependencies warnings (esperado)\n- Configurações atualizadas conforme necessário\n</info added on 2025-08-29T20:08:56.947Z>\n</info added on 2025-08-29T20:10:55.787Z>",
+            "status": "done",
+            "testStrategy": "After updating, run the entire existing test suite (unit, integration, e2e) to catch any regressions. Perform a full application smoke test, checking critical user flows like login, navigation, and data display to ensure the application remains stable and functional."
+          },
+          {
+            "id": 2,
+            "title": "Optimize Tailwind CSS Configuration for Design System Alignment",
+            "description": "Refactor the `tailwind.config.js` file to fully integrate the design system's tokens for colors, typography, spacing, and other theme properties.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Translate all design system tokens (e.g., primary color, body font, spacing scale) into the `theme.extend` section of the Tailwind configuration file. Use CSS variables defined in `globals.css` as the source of truth for these tokens. Remove any hardcoded values or one-off utility classes that are now covered by the new system.",
+            "status": "pending",
+            "testStrategy": "Create a test page or Storybook story that displays all design system tokens (color palette, font styles, spacing units). Visually verify that applying Tailwind utility classes (e.g., `bg-primary`, `text-body`, `p-4`) correctly renders the styles defined by the new tokens."
+          },
+          {
+            "id": 3,
+            "title": "Enhance Core Shadcn/UI Configuration and Theming",
+            "description": "Update the core configuration and base styling of the existing Shadcn/UI components to consume the new design system tokens from the optimized Tailwind CSS configuration.",
+            "dependencies": [
+              "1.2"
+            ],
+            "details": "Modify the base CSS in `globals.css` where Shadcn/UI theming variables are defined, ensuring they map directly to the new design system tokens. Review and adjust the base styles of existing components (`button.tsx`, `card.tsx`, etc.) to ensure they align with the updated theme without requiring overrides.",
+            "status": "pending",
+            "testStrategy": "Visually inspect all existing Shadcn/UI components in the application or a Storybook environment. Confirm that all component variants (e.g., primary, secondary, destructive buttons) correctly reflect the new design system's colors, fonts, and spacing without regressions."
+          },
+          {
+            "id": 4,
+            "title": "Implement and Integrate React Hook Form with Zod",
+            "description": "Establish a robust and scalable form management system by integrating React Hook Form for state handling and Zod for schema-based validation.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Install `react-hook-form` and `zod` libraries. Create a reusable form component wrapper that integrates both. Refactor a single, representative form within the application (e.g., a user profile or settings form) to use this new system, defining its validation rules with a Zod schema and replacing all manual validation logic.",
+            "status": "pending",
+            "testStrategy": "Write unit tests for the Zod schema to ensure it correctly validates various data inputs. For the refactored form, test user interactions to confirm that validation errors appear correctly, form state is managed efficiently, and successful submission works as expected."
+          },
+          {
+            "id": 5,
+            "title": "Extend Shadcn/UI Library with New Design System Components",
+            "description": "Develop and add new, custom components to the Shadcn/UI library that are specified in the design system but are not currently available.",
+            "dependencies": [
+              "1.3"
+            ],
+            "details": "Based on the design system specifications, identify and build 2-3 new, required components (e.g., a `Stepper`, `AvatarGroup`, or a custom `Alert` variant). Use the `shadcn-ui add` CLI for a baseline, then customize the component's structure, styles, and functionality to precisely match the design. Ensure new components are accessible and well-documented.",
+            "status": "pending",
+            "testStrategy": "For each new component, create a Storybook story that covers all its props, states, and variants. Write unit tests to verify correct rendering and behavior. Perform an accessibility audit on the new components using automated tools and keyboard navigation."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Refactor Existing Layout for New Design System (PageLayout, Header, Sidebar)",
+        "description": "Refactor the existing application layout (`src/app/layout.tsx`) to implement the new design system, including a fixed sidebar and top header, and integrate it with existing pages.",
+        "status": "todo",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "Refactor the existing `src/app/layout.tsx` to implement the new design system's `PageLayout` structure, incorporating a fixed `Sidebar` and `Header`. The `Sidebar` should support navigation items (icon + label), grouping, and collapsed/expanded states. The `Header` should include placeholders for a logo, breadcrumbs, notifications, user avatar, and theme toggle. Migrate the existing home page (`src/app/page.tsx`) to utilize this new layout. Implement responsive navigation, ensuring it functions correctly with existing pages like 'login' and 'collaborators'. Integrate the existing authentication system with the new layout, ensuring protected routes and user-specific elements in the header work as expected. Finally, verify that all existing pages (e.g., 'collaborators') render and function correctly within the refactored layout.",
+        "testStrategy": "Verify the refactored `PageLayout` correctly applies the new design system on large screens. Test that the existing home page (`src/app/page.tsx`) renders correctly within the new layout. Navigate to existing pages (e.g., 'login', 'collaborators') and confirm they display correctly and maintain their functionality within the new layout. Test the responsive behavior by resizing the viewport, ensuring the sidebar collapses to a hamburger menu and can be toggled. Verify the integration with the authentication system by checking protected routes and user information display in the header.",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Evolve and Extend Foundational UI Components (Shadcn/UI) for New Design System",
+        "description": "Evolve and extend existing Shadcn/UI components to align with the new design system. This task focuses on improving the current UI foundation and adding necessary new components, rather than migrating to a different library.",
+        "status": "todo",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "Evolve and extend existing Shadcn/UI components located in `src/components/ui/` (e.g., `button`, `card`, `input`, etc.) to align with the new design system. This includes improving their consistency, accessibility, and extending their functionality where needed. Crucially, maintain backward compatibility and ensure existing features that use these components (e.g., `collaborators` related UI) continue to function correctly without regressions. Additionally, integrate new foundational components such as `Avatar`, `Switch`, and `DropdownMenu` (leveraging Shadcn/UI where available, or custom implementations adhering to Shadcn/UI patterns) into this system, ensuring they are accessible and customizable via props and adhere to the new design.",
+        "testStrategy": "Create a Storybook or a dedicated test page to display all improved, extended, and newly added component variants. Write unit tests for each component to verify that props are handled correctly, they render the expected output, and maintain their original functionality and accessibility after evolution. Perform comprehensive regression testing on existing pages and features that utilize these components (e.g., `collaborators` views) to ensure no breaking changes or visual regressions were introduced. Manually test for accessibility features like keyboard navigation and screen reader compatibility for all components. Verify that all components visually conform to the new design system specifications.",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Refactor Existing Forms with React Hook Form and Zod",
+        "description": "Refactor existing application forms to leverage React Hook Form and Zod more robustly, ensuring a consistent and improved user experience for form interactions. This task focuses on evolving current implementations rather than building from scratch.",
+        "status": "todo",
+        "dependencies": [
+          1,
+          3
+        ],
+        "priority": "high",
+        "details": "Refactor existing forms (e.g., 'collaborators' forms) to utilize React Hook Form and Zod for enhanced robustness and maintainability. Migrate the refactored form components to align with the new design system components. Ensure that all existing form functionalities, particularly for 'collaborators', remain fully operational after the refactoring. Improve the overall validation experience and error feedback mechanisms, ensuring clear and timely user guidance. Create reusable form field components (e.g., `InputField`, `SelectField`, `Checkbox`) as part of this refactoring process, which should internally use React Hook Form's `Controller` or `register` and automatically display validation error messages from a Zod schema. Error messages should continue to be displayed directly below their respective fields. This task aims to evolve and improve existing form infrastructure, providing a foundation for future form development.",
+        "testStrategy": "Thoroughly test the refactored 'collaborators' forms to ensure all existing functionalities (creation, editing, submission) work correctly and without regressions. Verify that the forms now use the new design system components. Test form submission with both valid and invalid data, ensuring Zod-powered validation messages appear correctly and with improved feedback below the fields upon validation failure. Confirm that the overall user experience for form interaction and error handling has improved.",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Integrate Existing JWT Authentication with New Design System",
+        "description": "Integrate the existing JWT authentication system with the new design system and components. This task focuses on adapting the current authentication flow to the new UI, rather than building authentication from scratch.",
+        "status": "todo",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "Adapt the existing JWT authentication system to seamlessly integrate with the new layout and components. Create or update a `useAuth` hook that effectively manages user authentication state (user object, loading, isAuthenticated) by interacting with the existing JWT-based backend API. Ensure the `Header` and `Sidebar` components correctly display user-specific information (e.g., username, profile picture) based on the authenticated state. Implement or adapt protected route logic to work with the new layout structure, ensuring unauthenticated users are redirected appropriately. Enhance the login and logout user experience by applying the new design system's components and styling to the authentication forms and flows.",
+        "testStrategy": "Write integration tests for the `useAuth` hook to verify state transitions (login, logout, session check) when interacting with the existing JWT API endpoints. Test the protected route components to ensure correct redirection based on authentication status within the new layout. Perform visual and functional testing of the login and logout forms/flows to ensure they align with the new design system and provide a smooth user experience. Verify that user information is correctly displayed in the Header and Sidebar upon successful authentication.",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Enhance Feedback System (Sonner Toasts & Modals)",
+        "description": "Enhance the existing feedback system by improving the configuration and usage of Sonner for toasts and refactoring existing modals (e.g., confirmation dialogs) to align with the new design system. Ensure continuity of existing feedback functionality while significantly improving the overall user experience and integration across the application.",
+        "status": "todo",
+        "dependencies": [
+          1,
+          3
+        ],
+        "priority": "medium",
+        "details": "Improve the existing toast system by refining the configuration and usage of Sonner, ensuring consistent styling, better accessibility, and a more streamlined API for triggering success, error, and info toasts. Refactor existing modal dialogs, such as the `ConfirmationDialog` used for critical actions (e.g., delete confirmation), to align with the new design system and utilize a generic `Dialog` component based on `Radix.Dialog` with focus trapping. Ensure seamless integration of the enhanced feedback system across all relevant pages and components, verifying that existing feedback mechanisms continue to function correctly while delivering an improved user experience aligned with the new design.",
+        "testStrategy": "Verify the improved Sonner toast system functions correctly, displaying various toast types (success, error, info), stacking properly, and disappearing automatically, with enhanced styling and accessibility. Test refactored modal dialogs (e.g., `ConfirmationDialog`) to confirm they open/close correctly, trap focus, and are accessible via keyboard and overlay clicks, aligning with the new design system. Validate that existing components and pages that previously used these feedback mechanisms now correctly integrate and display feedback using the enhanced system without regressions, ensuring a consistent and improved user experience.",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Refactor Data Display Components (Tables, Pagination, Breadcrumbs)",
+        "description": "Refactor existing data display components, including tables and pagination, to align with the new design system, and integrate new breadcrumbs for improved navigation.",
+        "status": "todo",
+        "dependencies": [
+          3
+        ],
+        "priority": "medium",
+        "details": "Refactor existing data tables (e.g., the `collaborators` table) to align with the new design system, ensuring they accept `columns` and `rows` as props, support custom cell rendering, and integrate an actions column using the `DropdownMenu` from Task 3. Implement loading (skeleton) and empty states for these refactored tables. Migrate existing pagination components to conform to the new design system. Crucially, ensure that existing data listings, particularly the `collaborators` list, continue to function correctly and without regressions after these refactorings. Improve the overall navigation and filtering experience for data listings. Additionally, implement a new `Breadcrumbs` component to provide enhanced navigation trails.",
+        "testStrategy": "Thoroughly test the refactored data tables (e.g., `collaborators` table) with existing and mock data, verifying all columns and rows are displayed correctly and existing functionalities are preserved. Test the loading and empty states for these tables. Verify the migrated `Pagination` component functions correctly by simulating page changes. Test the new `Breadcrumbs` component to ensure it renders navigation links accurately and integrates seamlessly with existing routes. Verify improved filtering and navigation capabilities for data listings.",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implementação do Dashboard Principal com Integração de Dados e Métricas",
+        "description": "Desenvolver o Dashboard principal do sistema, integrando-o com os dados de colaboradores existentes e o sistema de autenticação. O dashboard deve exibir métricas relevantes e preparar a base para futuras funcionalidades.",
+        "status": "todo",
+        "dependencies": [
+          2,
+          3,
+          5
+        ],
+        "priority": "medium",
+        "details": "Criar a página do Dashboard principal (`/dashboard`). Utilizar o `PageLayout` e os novos componentes do design system (e.g., `Grid`, `Card`) para a estrutura e exibição. Integrar com a API de colaboradores para buscar e exibir métricas e resumos relevantes sobre os dados dos colaboradores existentes (e.g., número total, distribuição por cargo/departamento, etc.). Garantir que o dashboard respeite as permissões e dados do usuário autenticado, utilizando o sistema de autenticação existente. Incluir seções que possam ser estendidas para futuras funcionalidades como 'Escolas' e 'Concursos', mesmo que inicialmente vazias ou com placeholders. Apresentar um layout responsivo.",
+        "testStrategy": "Realizar revisão visual para garantir que o Dashboard esteja alinhado com o design system e wireframes. Verificar a responsividade do layout em diferentes tamanhos de tela. Testar a exibição correta das métricas dos colaboradores, garantindo que os dados sejam carregados da API e exibidos com precisão. Verificar o comportamento do dashboard para usuários autenticados e não autenticados (se aplicável, e.g., redirecionamento). Confirmar que os componentes estão corretamente compostos e interagem conforme esperado.",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Create Reusable Page Templates (List & Form)",
+        "description": "Refactor the approach to page creation by developing reusable templates for common application patterns: list pages and form pages. This task focuses on building generic, configurable templates that can be easily adapted for future features (e.g., 'Escolas', 'Concursos'), ensuring consistency and accelerating development.",
+        "status": "todo",
+        "dependencies": [
+          2,
+          4,
+          6,
+          7
+        ],
+        "priority": "medium",
+        "details": "Develop a generic **List Page Template** that includes:\n*   Integration with `PageLayout` for consistent header (title, 'Novo' button placeholder).\n*   A configurable `FiltersBar` component (search, select inputs).\n*   Integration with the `Table` component for data display, supporting dynamic columns and data.\n*   Integration with the `Pagination` component.\n*   A generic 'Actions' column with a dropdown (e.g., 'Edit', 'Delete', 'View'), using `ConfirmationDialog` for delete actions.\n\nDevelop a generic **Form Page Template** (for Create/Edit) that includes:\n*   Integration with `PageLayout`.\n*   A generic `FormCard` component to wrap form elements.\n*   Support for various input types (e.g., `InputField`, `SelectField`) from the design system.\n*   Integration with a form state management library (e.g., React Hook Form, Zod) for validation and submission.\n*   Generic save/cancel buttons with success/error handling (e.g., toast notifications, redirection).\n\nEnsure both templates are fully compatible with the new design system components. Prepare these templates to be easily adaptable for future 'master' data functionalities (e.g., 'Escolas', 'Concursos'). **Document** the usage of these templates, including how to configure them with specific data, columns, form fields, and actions.",
+        "testStrategy": "Develop comprehensive integration tests for both the generic List Page Template and Form Page Template. For the List Template, verify that the `FiltersBar`, `Table`, and `Pagination` components integrate correctly and can handle mocked data and actions generically. Test the generic action dropdown and the `ConfirmationDialog` flow. For the Form Template, verify that form elements can be rendered, state managed, and submission handled generically. Ensure both templates adhere to the new design system's visual and functional requirements. Document examples of how to instantiate and test these templates with specific data models.",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Build a Configurable Dynamic Form System",
+        "description": "Develop a foundational, configurable dynamic form system designed to generate and manage various forms across the application. This infrastructure task aims to provide a reusable and extensible solution for creating and editing entities, moving away from specific form implementations towards a more generic, configuration-driven approach for future functionalities.",
+        "status": "todo",
+        "dependencies": [
+          2,
+          4,
+          6,
+          9
+        ],
+        "priority": "medium",
+        "details": "Design and implement a core dynamic form rendering component that can interpret a configuration object (e.g., a schema definition) to render form fields. This system must:\n1.  Integrate seamlessly with React Hook Form for robust state management and form handling.\n2.  Utilize Zod for defining and applying dynamic validation schemas based on the form configuration.\n3.  Support a wide range of input types, including text fields (`InputField`), select dropdowns (`SelectField`), checkboxes, radio buttons, and potentially other custom components, leveraging the reusable form field components from Task 4.\n4.  Provide mechanisms for dynamic validation based on the provided Zod schemas.\n5.  Include a generic submission handler that can be customized per form instance, and integrate with the toast system (Task 6) for user feedback on success or failure.\nThis task focuses on building the underlying infrastructure to enable rapid development of future forms.",
+        "testStrategy": "Conduct comprehensive unit and integration tests for the dynamic form system.\n1.  Verify that the system correctly renders various form fields based on different configuration schemas.\n2.  Test the integration with React Hook Form and Zod, ensuring that dynamic validation rules are correctly applied and error messages are displayed for invalid inputs.\n3.  Create test cases for forms with diverse field types (text, select, checkbox) and complex validation scenarios to ensure robustness.\n4.  Test the generic form submission process, verifying that the `onSubmit` handler is invoked and that success/error toasts (from Task 6) are displayed appropriately.\n5.  Ensure the system's extensibility by testing the ease of adding new field types or validation rules.",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Optimize Responsive Design and Enhance User Experience",
+        "description": "Optimize the responsiveness of all existing and new pages, enhance user experience on mobile devices, and ensure all components function seamlessly across various screen sizes. This task focuses on improving overall usability and preparing the system for future functionalities.",
+        "status": "todo",
+        "dependencies": [
+          8,
+          9,
+          10
+        ],
+        "priority": "low",
+        "details": "Conduct a comprehensive optimization of responsive design across all implemented pages (Dashboard, List, Form) and components (Header, Sidebar, Table, Grid). This includes refining layouts at various breakpoints (mobile, tablet, desktop) to ensure optimal display and interaction. Specifically, ensure the Sidebar transitions correctly to a drawer menu, tables adapt effectively to smaller screens (e.g., via card-list transformation or horizontal scrolling), and grids stack appropriately on mobile. Additionally, identify and resolve usability issues, particularly on mobile devices, to enhance the overall user experience and lay the groundwork for future feature integration.",
+        "testStrategy": "Manual testing using browser developer tools' responsive mode across standard breakpoints (e.g., 360px, 768px, 1024px) to verify layout integrity, prevent overflows, and ensure text readability. Conduct user experience testing, especially on mobile devices, to identify and rectify usability issues. Consider implementing automated visual regression tests for critical pages to prevent future regressions.",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Accessibility (A11y) Audit and Remediation",
+        "description": "Perform a comprehensive accessibility audit across the entire system, identify and correct all identified issues, and ensure compliance with WCAG standards.",
+        "status": "todo",
+        "dependencies": [
+          11
+        ],
+        "priority": "low",
+        "details": "Conduct a complete accessibility audit across the entire system using automated tools (e.g., Axe DevTools) to scan all pages for violations. Systematically address and fix all identified accessibility issues. Ensure all fixes and existing components comply with WCAG 2.1 AA guidelines. Perform thorough manual testing, including keyboard-only navigation to ensure all interactive elements (buttons, links, form fields, modals) are focusable and operable. Test with various screen readers (e.g., NVDA, VoiceOver) to validate the user experience. Verify proper focus management, especially in complex components like modals and dropdowns. Check for sufficient color contrast and the correct implementation of ARIA attributes where necessary. Document all implemented accessibility improvements and remediation steps.",
+        "testStrategy": "Integrate and run automated accessibility checkers (e.g., Axe) in the CI pipeline to prevent regressions and identify initial violations. Conduct a comprehensive manual audit using only keyboard navigation to ensure full operability and proper focus management across the entire application. Perform dedicated testing with common screen readers (e.g., NVDA, VoiceOver) to verify content readability, navigation, and interactive element accessibility. Develop and utilize a detailed checklist based on WCAG 2.1 AA guidelines to systematically track and ensure compliance throughout the audit and remediation process. Maintain detailed records of identified issues, their severity, and the implemented solutions.",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Refactor Existing Pages to New Design System",
+        "description": "Migrate existing functional pages (home, login, collaborators) to align with the new design system, ensuring all functionalities are preserved and user experience is enhanced.",
+        "details": "This task involves a comprehensive refactoring of existing application pages to fully adopt the new design system and its underlying components and layout. Specific focus areas include:\n\n1.  **Home Page (`src/app/page.tsx`):** Ensure all internal UI elements and components within the home page are refactored to utilize the new design system components (e.g., cards, buttons, typography) and correctly integrate with the `PageLayout` established in Task 2.\n2.  **Login Page:** Completely refactor the login form and all associated UI elements (input fields, buttons, error messages, links) to use the new design system components (from Task 3) and leverage the React Hook Form and Zod infrastructure (from Task 4) for robust validation and submission.\n3.  **Collaborators Pages:** Migrate both the collaborators list page and the collaborators form (create/edit) page:\n    *   **Collaborators List Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor the data table, filtering mechanisms, pagination controls, and action buttons (e.g., edit, delete) to exclusively use components from the new design system (Task 3).\n    *   **Collaborators Form Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor all form fields, submission buttons, and validation feedback displays to use the new design system components (Task 3) and integrate seamlessly with the React Hook Form and Zod setup (Task 4).\n4.  **Functionality Preservation:** Throughout the refactoring process, rigorously ensure that all existing functionalities (e.g., login authentication, data display, form submission, CRUD operations for collaborators) remain fully operational without regressions.\n5.  **User Experience Improvement:** Leverage the new design system's patterns and components to enhance the overall user experience, focusing on consistency, clarity, and responsiveness.",
+        "testStrategy": "Perform thorough testing across all refactored pages:\n\n1.  **Visual Verification:** Conduct a comprehensive visual review of the home, login, and collaborators pages on various screen sizes (desktop, tablet, mobile) to ensure they accurately reflect the new design system's aesthetics and responsiveness. Verify correct alignment, spacing, typography, and component rendering.\n2.  **Functional Testing:**\n    *   **Home Page:** Verify all interactive elements (if any) function as expected and content loads correctly.\n    *   **Login Page:** Test successful login with valid credentials, verify error messages for invalid credentials, and ensure form validation works correctly (e.g., empty fields).\n    *   **Collaborators List Page:** Verify data loading, filtering, sorting (if applicable), pagination, and that all row actions (e.g., 'Edit', 'Delete', 'View') trigger the correct behavior. Test the 'Novo' (New) button navigation.\n    *   **Collaborators Form Page:** Test creation of new collaborators and editing of existing ones. Verify all form fields accept valid input, display correct validation errors for invalid input (using Zod rules), and that form submission works as expected (e.g., success message, redirection).\n3.  **Regression Testing:** Execute existing end-to-end tests (if any) or manually re-test critical user flows involving these pages to confirm no regressions were introduced.\n4.  **Accessibility Check:** Perform basic accessibility checks, including keyboard navigation, focus management, and screen reader compatibility for key interactive elements on all refactored pages.",
+        "status": "pending",
+        "dependencies": [
+          2,
+          3,
+          4
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-28T21:21:53.353Z",
+      "updated": "2025-08-29T20:11:01.163Z",
+      "description": "Tasks for frontend-design context"
     }
   }
 }

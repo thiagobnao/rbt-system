@@ -12,11 +12,13 @@ Este diretório contém as migrações SQL para configurar o banco de dados do R
 ## Como Executar
 
 ### 1. Via Supabase Dashboard
+
 1. Acesse o projeto no Supabase Dashboard
 2. Vá para SQL Editor
 3. Execute o conteúdo de cada arquivo de migração em ordem
 
 ### 2. Via Supabase CLI
+
 ```bash
 # Instalar Supabase CLI
 npm install -g supabase
@@ -29,6 +31,7 @@ supabase db reset
 ```
 
 ### 3. Via psql (PostgreSQL direto)
+
 ```bash
 psql -h your_host -U your_user -d your_database -f 001_create_users_table.sql
 ```
@@ -41,24 +44,28 @@ psql -h your_host -U your_user -d your_database -f 001_create_users_table.sql
 ## Migrações Disponíveis
 
 ### 001 - Users Table
+
 - **Arquivo:** `001_create_users_table.sql`
 - **Descrição:** Cria a tabela de usuários com autenticação
 - **Dependências:** Nenhuma
 
 ### 002 - Collaborators Table
+
 - **Arquivo:** `002_create_collaborators_table.sql`
 - **Descrição:** Cria a tabela de colaboradores com RLS
 - **Dependências:** 001 (users table)
 
 ## Verificação
 
-### Após executar a migração 001 (users), verifique se:
+### Após executar a migração 001 (users), verifique se
+
 - A tabela `users` foi criada
 - Os índices foram criados
 - O trigger `update_users_updated_at` foi criado
 - A função `update_updated_at_column()` foi criada
 
-### Após executar a migração 002 (collaborators), verifique se:
+### Após executar a migração 002 (collaborators), verifique se
+
 - A tabela `collaborators` foi criada
 - Os índices foram criados
 - Os triggers foram criados
