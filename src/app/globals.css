@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    /* Colors - Base */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -26,9 +27,104 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+
+    /* Colors - Primary Scale */
+    --primary-50: 240 5.9% 98%;
+    --primary-100: 240 5.9% 95%;
+    --primary-200: 240 5.9% 90%;
+    --primary-300: 240 5.9% 80%;
+    --primary-400: 240 5.9% 70%;
+    --primary-500: 240 5.9% 60%;
+    --primary-600: 240 5.9% 50%;
+    --primary-700: 240 5.9% 40%;
+    --primary-800: 240 5.9% 30%;
+    --primary-900: 240 5.9% 20%;
+    --primary-950: 240 5.9% 10%;
+
+    /* Colors - Secondary Scale */
+    --secondary-50: 240 4.8% 98%;
+    --secondary-100: 240 4.8% 95%;
+    --secondary-200: 240 4.8% 90%;
+    --secondary-300: 240 4.8% 80%;
+    --secondary-400: 240 4.8% 70%;
+    --secondary-500: 240 4.8% 60%;
+    --secondary-600: 240 4.8% 50%;
+    --secondary-700: 240 4.8% 40%;
+    --secondary-800: 240 4.8% 30%;
+    --secondary-900: 240 4.8% 20%;
+    --secondary-950: 240 4.8% 10%;
+
+    /* Colors - Semantic */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 98%;
+
+    /* Typography - Font Families */
+    --font-sans: "Inter", "system-ui", "sans-serif";
+    --font-serif: "Georgia", "serif";
+    --font-mono: "JetBrains Mono", "ui-monospace", "monospace";
+    --font-display: "Inter", "system-ui", "sans-serif";
+    --font-body: "Inter", "system-ui", "sans-serif";
+
+    /* Typography - Font Sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+    --text-6xl: 3.75rem;
+
+    /* Typography - Line Heights */
+    --leading-xs: 1rem;
+    --leading-sm: 1.25rem;
+    --leading-base: 1.5rem;
+    --leading-lg: 1.75rem;
+    --leading-xl: 1.75rem;
+    --leading-2xl: 2rem;
+    --leading-3xl: 2.25rem;
+    --leading-4xl: 2.5rem;
+    --leading-5xl: 1;
+    --leading-6xl: 1;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --spacing-3xl: 4rem;
+    --spacing-4xl: 6rem;
+    --spacing-5xl: 8rem;
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+    /* Z-Index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-banner: 1030;
+    --z-overlay: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
   }
 
   .dark {
+    /* Colors - Base */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -48,13 +144,53 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+
+    /* Colors - Primary Scale (Dark) */
+    --primary-50: 240 5.9% 10%;
+    --primary-100: 240 5.9% 20%;
+    --primary-200: 240 5.9% 30%;
+    --primary-300: 240 5.9% 40%;
+    --primary-400: 240 5.9% 50%;
+    --primary-500: 240 5.9% 60%;
+    --primary-600: 240 5.9% 70%;
+    --primary-700: 240 5.9% 80%;
+    --primary-800: 240 5.9% 90%;
+    --primary-900: 240 5.9% 95%;
+    --primary-950: 240 5.9% 98%;
+
+    /* Colors - Secondary Scale (Dark) */
+    --secondary-50: 240 4.8% 10%;
+    --secondary-100: 240 4.8% 20%;
+    --secondary-200: 240 4.8% 30%;
+    --secondary-300: 240 4.8% 40%;
+    --secondary-400: 240 4.8% 50%;
+    --secondary-500: 240 4.8% 60%;
+    --secondary-600: 240 4.8% 70%;
+    --secondary-700: 240 4.8% 80%;
+    --secondary-800: 240 4.8% 90%;
+    --secondary-900: 240 4.8% 95%;
+    --secondary-950: 240 4.8% 98%;
+
+    /* Colors - Semantic (Dark) */
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 0 0% 98%;
+    --info: 217 91% 70%;
+    --info-foreground: 0 0% 98%;
+
+    /* Shadows (Dark) */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.3);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
   }
