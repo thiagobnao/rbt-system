@@ -8,14 +8,17 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Search, Filter } from 'lucide-react';
 import { CollaboratorList } from '@/components/collaborators/CollaboratorList';
+import { CreateCollaboratorModal } from '@/components/collaborators/CreateCollaboratorModal';
+import { CollaboratorFormModal } from '@/components/collaborators/CollaboratorFormModal';
 import { collaboratorService } from '@/lib/services/collaboratorService';
 import { Collaborator, CollaboratorFilters } from '@/lib/types/collaborator';
-import { toast } from 'sonner';
+import { useToast } from '@/lib/hooks/useToast';
 import { PageLayout } from '@/components/layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function CollaboratorsPage() {
   const router = useRouter();
+  const toast = useToast();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<CollaboratorFilters>({
@@ -24,6 +27,7 @@ export default function CollaboratorsPage() {
   });
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     loadCollaborators();
@@ -71,6 +75,15 @@ export default function CollaboratorsPage() {
     }
   };
 
+  const handleModalSuccess = () => {
+    setIsModalOpen(false);
+    loadCollaborators();
+  };
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <ProtectedRoute>
       <PageLayout>
@@ -83,7 +96,7 @@ export default function CollaboratorsPage() {
                 Gerencie os colaboradores do sistema
               </p>
             </div>
-            <Button onClick={() => router.push('/collaborators/new')}>
+            <Button onClick={() => setIsModalOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Colaborador
             </Button>
@@ -150,6 +163,17 @@ export default function CollaboratorsPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Modal de Cadastro */}
+        <CreateCollaboratorModal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+        >
+          <CollaboratorFormModal
+            onSuccess={handleModalSuccess}
+            onCancel={handleModalCancel}
+          />
+        </CreateCollaboratorModal>
       </PageLayout>
     </ProtectedRoute>
   );

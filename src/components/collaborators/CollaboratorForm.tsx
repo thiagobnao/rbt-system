@@ -14,7 +14,7 @@ import { CreateCollaboratorRequest } from '@/lib/types/collaborator';
 import { createCollaboratorSchema } from '@/lib/validations/collaborator';
 import { collaboratorService } from '@/lib/services/collaboratorService';
 import { formatCPF, formatPhone, formatCEP } from '@/lib/utils/formatters';
-import { toast } from 'sonner';
+import { useToast } from '@/lib/hooks/useToast';
 import { cn } from '@/lib/utils';
 
 interface CollaboratorFormProps {
@@ -24,6 +24,7 @@ interface CollaboratorFormProps {
 
 export function CollaboratorForm({ mode, collaboratorId }: CollaboratorFormProps) {
   const router = useRouter();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(mode === 'edit');
 

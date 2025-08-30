@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 
 interface UseFormWithZodOptions<T extends FieldValues> extends Omit<UseFormProps<T>, 'resolver'> {
-  schema: z.ZodSchema<T>
+  schema: z.ZodSchema
   onSuccess?: (data: T) => void | Promise<void>
   onError?: (error: any) => void
   successMessage?: string
@@ -20,7 +20,7 @@ export function useFormWithZod<T extends FieldValues>({
   ...formOptions
 }: UseFormWithZodOptions<T>) {
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     ...formOptions,
   })
 

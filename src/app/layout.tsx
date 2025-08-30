@@ -25,7 +25,14 @@ export default function RootLayout({
             {children}
           </LayoutProvider>
         </AuthProvider>
-        <Toaster position="top-right" />
+        <Toaster 
+          position="top-right" 
+          richColors
+          closeButton
+          duration={4000}
+          expand={true}
+          maxToasts={3}
+        />
       </body>
     </html>
   )

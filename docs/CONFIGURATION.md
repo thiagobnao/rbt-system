@@ -95,6 +95,26 @@ const config: Config = {
 **Problema**: Conflitos de tipos entre Zod e React Hook Form
 **Solução**: Usar `as any` para resolver temporariamente
 
+## Organização do Projeto
+
+### Metodologia de Desenvolvimento
+O projeto segue uma metodologia de separação clara entre responsabilidades de backend e frontend:
+
+#### Estrutura de Tarefas
+- **Tag `master`**: Foco em backend, APIs, banco de dados e lógica de negócio
+- **Tag `frontend-design`**: Foco em UI, componentes, formulários e experiência do usuário
+
+#### Fluxo de Trabalho
+1. **Backend First**: Desenvolver APIs e serviços antes da interface
+2. **Separação Clara**: Evitar misturar responsabilidades em uma única tarefa
+3. **Dependências Cruzadas**: Utilizar dependências entre tags quando necessário
+
+### Benefícios da Organização
+- **Arquitetura Limpa**: Separação clara de responsabilidades
+- **Desenvolvimento Paralelo**: Possibilidade de trabalhar backend e frontend simultaneamente
+- **Manutenibilidade**: Código mais organizado e fácil de manter
+- **Escalabilidade**: Padrão claro para crescimento do projeto
+
 ## Setup Inicial
 
 1. **Instalar dependências**:

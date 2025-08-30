@@ -47,6 +47,39 @@ A organização dos diretórios segue as convenções do Next.js e melhores prá
 - **`supabase/`**: Configuração e migrações do banco de dados gerenciadas pelo Supabase.
   - **`migrations/`**: Arquivos SQL que definem o schema do banco de dados.
 
+## Metodologia de Desenvolvimento
+
+O projeto utiliza uma metodologia de separação clara entre responsabilidades de backend e frontend, organizando as tarefas de desenvolvimento em contextos específicos:
+
+### Organização de Tarefas
+
+- **Tag `master`**: Responsabilidades de backend
+  - Schemas de banco de dados e migrações Supabase
+  - Endpoints de API e serviços de dados
+  - Lógica de negócio e cálculos
+  - Autenticação e segurança
+  - Otimização de performance e infraestrutura
+
+- **Tag `frontend-design`**: Responsabilidades de frontend
+  - Componentes UI e páginas
+  - Implementação de formulários
+  - Sistema de design e componentes reutilizáveis
+  - Experiência do usuário e responsividade
+  - Gerenciamento de estado do cliente
+
+### Fluxo de Desenvolvimento
+
+1. **Backend First**: Sempre completar tarefas de backend antes das correspondentes de frontend
+2. **Dependências Cruzadas**: Utilizar dependências entre tags quando necessário
+3. **Separação Clara**: Evitar misturar responsabilidades de backend e frontend na mesma tarefa
+
+### Benefícios da Metodologia
+
+- **Arquitetura Limpa**: Separação clara de responsabilidades
+- **Desenvolvimento Paralelo**: Possibilidade de trabalhar backend e frontend simultaneamente
+- **Manutenibilidade**: Código mais organizado e fácil de manter
+- **Escalabilidade**: Padrão claro para crescimento do projeto
+
 ## Especificidades e Pontos Críticos
 
 - **Variáveis de Ambiente:** O projeto depende de um arquivo `.env.local` para configurar as credenciais de acesso ao Supabase. As variáveis necessárias estão listadas no arquivo `.env.example`. As chaves principais são:

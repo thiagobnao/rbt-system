@@ -5,6 +5,8 @@ import { collaboratorFiltersSchema, paginationSchema } from '@/lib/validations/c
 
 export const GET = withAuth(async (req: NextRequest, user) => {
   try {
+    console.log('🔍 GET /api/collaborators - User:', user);
+    
     const { searchParams } = new URL(req.url);
     
     // Parse and validate query parameters
@@ -17,21 +19,26 @@ export const GET = withAuth(async (req: NextRequest, user) => {
       limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
     });
 
+    console.log('🔍 Filters:', filters);
+
     const pagination = paginationSchema.parse({
       page: filters.page || 1,
       limit: filters.limit || 20,
     });
 
+    console.log('🔍 Pagination:', pagination);
+
     const supabase = getSupabase();
-    
-    // Build the base query
+
+    // Build the query
     let query = supabase
       .from('collaborators')
       .select('*', { count: 'exact' });
 
     // Apply filters
     if (filters.search) {
-      query = query.or(`name.ilike.%${filters.search}%,cpf.ilike.%${filters.search}%`);
+      const searchTerm = filters.search;
+      query = query.or(`name.ilike.%${searchTerm}%,cpf.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`);
     }
 
     if (filters.status) {
@@ -48,23 +55,25 @@ export const GET = withAuth(async (req: NextRequest, user) => {
 
     // Apply pagination
     const offset = (pagination.page - 1) * pagination.limit;
-    query = query.range(offset, offset + pagination.limit - 1);
+    query = query
+      .range(offset, offset + pagination.limit - 1)
+      .order('created_at', { ascending: false });
 
-    // Order by creation date (newest first)
-    query = query.order('created_at', { ascending: false });
-
+    // Execute the query
     const { data: collaborators, error, count } = await query;
 
     if (error) {
-      console.error('Error fetching collaborators:', error);
+      console.error('❌ Supabase error:', error);
       return NextResponse.json(
-        { message: 'Erro ao buscar colaboradores' },
+        { message: 'Erro ao buscar colaboradores', error: error.message },
         { status: 500 }
       );
     }
 
     const total = count || 0;
     const totalPages = Math.ceil(total / pagination.limit);
+
+    console.log('✅ Success - Total:', total, 'TotalPages:', totalPages, 'Returned:', collaborators?.length || 0);
 
     return NextResponse.json({
       collaborators: collaborators || [],
@@ -75,7 +84,7 @@ export const GET = withAuth(async (req: NextRequest, user) => {
     });
 
   } catch (error) {
-    console.error('Error in GET /api/collaborators:', error);
+    console.error('❌ Error in GET /api/collaborators:', error);
     
     if (error instanceof Error && error.message.includes('validation')) {
       return NextResponse.json(
@@ -85,7 +94,7 @@ export const GET = withAuth(async (req: NextRequest, user) => {
     }
 
     return NextResponse.json(
-      { message: 'Erro interno do servidor' },
+      { message: 'Erro interno do servidor', error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useToast } from '@/lib/hooks/useToast';
 import { AuthUser, AuthRole } from '@/lib/auth';
 
 interface User {
@@ -39,6 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const toast = useToast();
 
   // Verificar token e carregar dados do usuário
   const loadUserFromStorage = useCallback(async () => {
@@ -155,6 +156,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuthGuard(requiredRole?: AuthRole) {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     if (!isLoading) {

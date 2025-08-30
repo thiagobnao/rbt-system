@@ -2,7 +2,7 @@
   "models": {
     "main": {
       "provider": "gemini-cli",
-      "modelId": "gemini-2.5-flash",
+      "modelId": "gemini-2.5-pro",
       "maxTokens": 65536,
       "temperature": 0.2
     },
