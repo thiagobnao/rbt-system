@@ -35,6 +35,7 @@ import { FormFieldWrapper } from '@/components/ui/form'
 ```
 
 **Props:**
+
 - `name`: Nome do campo (string)
 - `label`: Label do campo (opcional)
 - `description`: Descrição do campo (opcional)
@@ -54,6 +55,7 @@ import { FormSubmitButton } from '@/components/ui/form'
 ```
 
 **Props:**
+
 - `loading`: Estado de loading manual (opcional)
 - `children`: Conteúdo do botão
 - Todas as props do componente Button
@@ -95,6 +97,7 @@ const {
 ```
 
 **Opções:**
+
 - `schema`: Schema Zod para validação
 - `defaultValues`: Valores padrão do formulário
 - `onSuccess`: Callback executado em caso de sucesso
@@ -346,6 +349,7 @@ export function UserForm() {
 ## Melhores Práticas
 
 ### 1. Schemas Reutilizáveis
+
 Crie schemas base e estenda conforme necessário:
 
 ```tsx
@@ -361,6 +365,7 @@ const updateUserSchema = baseUserSchema.partial().extend({
 ```
 
 ### 2. Validação em Tempo Real
+
 Use `validateField` para validação em tempo real:
 
 ```tsx
@@ -372,6 +377,7 @@ const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 ```
 
 ### 3. Formatação de Campos
+
 Use formatters para campos como CPF, telefone, etc.:
 
 ```tsx
@@ -382,6 +388,7 @@ const handleCPFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 ```
 
 ### 4. Tratamento de Erros
+
 Configure callbacks de erro para tratamento personalizado:
 
 ```tsx
@@ -398,6 +405,7 @@ const { form, handleSubmit } = useFormWithZod({
 ```
 
 ### 5. Estados de Loading
+
 Use o estado `isSubmitting` para feedback visual:
 
 ```tsx

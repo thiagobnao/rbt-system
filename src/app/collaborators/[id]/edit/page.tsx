@@ -1,4 +1,5 @@
 import { CollaboratorForm } from '@/components/collaborators/CollaboratorForm';
+import { PageLayout } from '@/components/layout';
 
 interface EditCollaboratorPageProps {
   params: Promise<{
@@ -8,5 +9,9 @@ interface EditCollaboratorPageProps {
 
 export default async function EditCollaboratorPage({ params }: EditCollaboratorPageProps) {
   const { id } = await params;
-  return <CollaboratorForm mode="edit" collaboratorId={id} />;
+  return (
+    <PageLayout>
+      <CollaboratorForm mode="edit" collaboratorId={id} />
+    </PageLayout>
+  );
 }

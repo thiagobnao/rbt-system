@@ -4,15 +4,17 @@ Este documento detalha a arquitetura técnica, tecnologias e estrutura do projet
 
 ## Stack de Tecnologias
 
-- **Linguagem Principal:** TypeScript
-- **Framework:** Next.js 15 (com App Router)
-- **Backend e Banco de Dados:** Supabase (PostgreSQL)
-- **UI Framework:** React 18
-- **Estilização:** Tailwind CSS
-- **Componentes UI:** shadcn/ui, Aceternity UI
-- **Gerenciamento de Formulários:** React Hook Form
-- **Validação de Esquemas:** Zod
-- **Autenticação:** Supabase Auth Helpers, com JWT e bcryptjs para manipulação de senhas.
+- **Linguagem Principal:** TypeScript 5.9.2
+- **Framework:** Next.js 15.5.2 (com App Router)
+- **Backend e Banco de Dados:** Supabase 2.56.1 (PostgreSQL)
+- **UI Framework:** React 19.1.1
+- **Estilização:** Tailwind CSS 3.4.17
+- **Componentes UI:** shadcn/ui (Radix UI)
+- **Gerenciamento de Formulários:** React Hook Form 7.62.0
+- **Validação de Esquemas:** Zod 4.1.5
+- **Autenticação:** Supabase Auth Helpers 0.9.0, com JWT e bcryptjs para manipulação de senhas
+- **Notificações:** Sonner 2.0.7
+- **Ícones:** Lucide React 0.542.0
 
 ## Sistema de Design (Design System)
 

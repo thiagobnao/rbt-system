@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Implementação do Dashboard Principal com Integração de Dados e Métricas
+# Status: todo
+# Dependencies: 2, 3, 5
+# Priority: medium
+# Description: Desenvolver o Dashboard principal do sistema, integrando-o com os dados de colaboradores existentes e o sistema de autenticação. O dashboard deve exibir métricas relevantes e preparar a base para futuras funcionalidades.
+# Details:
+Criar a página do Dashboard principal (`/dashboard`). Utilizar o `PageLayout` e os novos componentes do design system (e.g., `Grid`, `Card`) para a estrutura e exibição. Integrar com a API de colaboradores para buscar e exibir métricas e resumos relevantes sobre os dados dos colaboradores existentes (e.g., número total, distribuição por cargo/departamento, etc.). Garantir que o dashboard respeite as permissões e dados do usuário autenticado, utilizando o sistema de autenticação existente. Incluir seções que possam ser estendidas para futuras funcionalidades como 'Escolas' e 'Concursos', mesmo que inicialmente vazias ou com placeholders. Apresentar um layout responsivo.
+
+# Test Strategy:
+Realizar revisão visual para garantir que o Dashboard esteja alinhado com o design system e wireframes. Verificar a responsividade do layout em diferentes tamanhos de tela. Testar a exibição correta das métricas dos colaboradores, garantindo que os dados sejam carregados da API e exibidos com precisão. Verificar o comportamento do dashboard para usuários autenticados e não autenticados (se aplicável, e.g., redirecionamento). Confirmar que os componentes estão corretamente compostos e interagem conforme esperado.

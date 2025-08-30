@@ -1,0 +1,25 @@
+# Task ID: 9
+# Title: Create Reusable Page Templates (List & Form)
+# Status: todo
+# Dependencies: 2, 4, 6, 7
+# Priority: medium
+# Description: Refactor the approach to page creation by developing reusable templates for common application patterns: list pages and form pages. This task focuses on building generic, configurable templates that can be easily adapted for future features (e.g., 'Escolas', 'Concursos'), ensuring consistency and accelerating development.
+# Details:
+Develop a generic **List Page Template** that includes:
+*   Integration with `PageLayout` for consistent header (title, 'Novo' button placeholder).
+*   A configurable `FiltersBar` component (search, select inputs).
+*   Integration with the `Table` component for data display, supporting dynamic columns and data.
+*   Integration with the `Pagination` component.
+*   A generic 'Actions' column with a dropdown (e.g., 'Edit', 'Delete', 'View'), using `ConfirmationDialog` for delete actions.
+
+Develop a generic **Form Page Template** (for Create/Edit) that includes:
+*   Integration with `PageLayout`.
+*   A generic `FormCard` component to wrap form elements.
+*   Support for various input types (e.g., `InputField`, `SelectField`) from the design system.
+*   Integration with a form state management library (e.g., React Hook Form, Zod) for validation and submission.
+*   Generic save/cancel buttons with success/error handling (e.g., toast notifications, redirection).
+
+Ensure both templates are fully compatible with the new design system components. Prepare these templates to be easily adaptable for future 'master' data functionalities (e.g., 'Escolas', 'Concursos'). **Document** the usage of these templates, including how to configure them with specific data, columns, form fields, and actions.
+
+# Test Strategy:
+Develop comprehensive integration tests for both the generic List Page Template and Form Page Template. For the List Template, verify that the `FiltersBar`, `Table`, and `Pagination` components integrate correctly and can handle mocked data and actions generically. Test the generic action dropdown and the `ConfirmationDialog` flow. For the Form Template, verify that form elements can be rendered, state managed, and submission handled generically. Ensure both templates adhere to the new design system's visual and functional requirements. Document examples of how to instantiate and test these templates with specific data models.

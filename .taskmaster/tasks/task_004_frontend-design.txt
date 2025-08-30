@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Refactor Existing Forms with React Hook Form and Zod
+# Status: todo
+# Dependencies: 1, 3
+# Priority: high
+# Description: Refactor existing application forms to leverage React Hook Form and Zod more robustly, ensuring a consistent and improved user experience for form interactions. This task focuses on evolving current implementations rather than building from scratch.
+# Details:
+Refactor existing forms (e.g., 'collaborators' forms) to utilize React Hook Form and Zod for enhanced robustness and maintainability. Migrate the refactored form components to align with the new design system components. Ensure that all existing form functionalities, particularly for 'collaborators', remain fully operational after the refactoring. Improve the overall validation experience and error feedback mechanisms, ensuring clear and timely user guidance. Create reusable form field components (e.g., `InputField`, `SelectField`, `Checkbox`) as part of this refactoring process, which should internally use React Hook Form's `Controller` or `register` and automatically display validation error messages from a Zod schema. Error messages should continue to be displayed directly below their respective fields. This task aims to evolve and improve existing form infrastructure, providing a foundation for future form development.
+
+# Test Strategy:
+Thoroughly test the refactored 'collaborators' forms to ensure all existing functionalities (creation, editing, submission) work correctly and without regressions. Verify that the forms now use the new design system components. Test form submission with both valid and invalid data, ensuring Zod-powered validation messages appear correctly and with improved feedback below the fields upon validation failure. Confirm that the overall user experience for form interaction and error handling has improved.

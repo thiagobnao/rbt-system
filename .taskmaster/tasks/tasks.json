@@ -197,7 +197,7 @@
           1,
           2
         ],
-        "status": "not_started",
+        "status": "pending",
         "subtasks": [
           {
             "id": 1,
@@ -260,7 +260,7 @@
         "id": 5,
         "title": "Core UI/UX and Responsive Design Implementation",
         "description": "Implement the application's core UI/UX, responsive design, and main navigation structure, leveraging the design system and components developed under the 'frontend-design' tag and based on the processed front-end PRD.",
-        "status": "not_started",
+        "status": "pending",
         "dependencies": [
           1
         ],
@@ -472,7 +472,7 @@
     ],
     "metadata": {
       "created": "2025-08-28T00:01:39.743Z",
-      "updated": "2025-08-28T18:05:20.246Z",
+      "updated": "2025-08-30T01:37:42.207Z",
       "description": "Tasks for master context"
     }
   },
@@ -482,7 +482,7 @@
         "id": 1,
         "title": "Frontend Libraries Refinement and Design System Enhancement",
         "description": "Refine and enhance existing core frontend dependencies to align with the evolving design system, focusing on improving the Shadcn/UI component library, robust form management, and optimized styling configurations.",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "details": "This task involves a comprehensive evolution and improvement of existing frontend libraries and configurations. Key activities include:\n1. Updating all existing frontend dependencies to their latest stable versions to ensure compatibility and leverage new features.\n2. Enhancing and extending the existing Shadcn/UI component library, focusing on improving current configurations, adding new components, and ensuring full alignment with the evolving design system.\n3. Implementing and configuring React Hook Form with Zod for robust form management and validation, integrating it more deeply across the application to replace any manual validation logic.\n4. Improving the existing Tailwind CSS configuration to better support and reflect the design system's tokens and styles, optimizing for consistency and maintainability.",
@@ -547,20 +547,86 @@
         "id": 2,
         "title": "Refactor Existing Layout for New Design System (PageLayout, Header, Sidebar)",
         "description": "Refactor the existing application layout (`src/app/layout.tsx`) to implement the new design system, including a fixed sidebar and top header, and integrate it with existing pages.",
-        "status": "todo",
+        "status": "done",
         "dependencies": [
           1
         ],
         "priority": "high",
         "details": "Refactor the existing `src/app/layout.tsx` to implement the new design system's `PageLayout` structure, incorporating a fixed `Sidebar` and `Header`. The `Sidebar` should support navigation items (icon + label), grouping, and collapsed/expanded states. The `Header` should include placeholders for a logo, breadcrumbs, notifications, user avatar, and theme toggle. Migrate the existing home page (`src/app/page.tsx`) to utilize this new layout. Implement responsive navigation, ensuring it functions correctly with existing pages like 'login' and 'collaborators'. Integrate the existing authentication system with the new layout, ensuring protected routes and user-specific elements in the header work as expected. Finally, verify that all existing pages (e.g., 'collaborators') render and function correctly within the refactored layout.",
         "testStrategy": "Verify the refactored `PageLayout` correctly applies the new design system on large screens. Test that the existing home page (`src/app/page.tsx`) renders correctly within the new layout. Navigate to existing pages (e.g., 'login', 'collaborators') and confirm they display correctly and maintain their functionality within the new layout. Test the responsive behavior by resizing the viewport, ensuring the sidebar collapses to a hamburger menu and can be toggled. Verify the integration with the authentication system by checking protected routes and user information display in the header.",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analisar estrutura atual do layout e definir requisitos do novo design system",
+            "description": "Examinar o layout atual (src/app/layout.tsx) e definir os requisitos para o novo layout com sidebar fixa e header superior, considerando a estrutura de navegação e responsividade.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 2
+          },
+          {
+            "id": 2,
+            "title": "Criar componente Header com navegação superior",
+            "description": "Desenvolver o componente Header que será posicionado na parte superior da aplicação, incluindo logo, navegação principal e área para ações do usuário (perfil, logout, etc.).",
+            "details": "",
+            "status": "done",
+            "dependencies": [
+              "2.1"
+            ],
+            "parentTaskId": 2
+          },
+          {
+            "id": 3,
+            "title": "Criar componente Sidebar com navegação lateral",
+            "description": "Desenvolver o componente Sidebar que será posicionado na lateral esquerda da aplicação, incluindo menu de navegação, ícones e suporte para navegação responsiva (colapsável em dispositivos móveis).",
+            "details": "",
+            "status": "done",
+            "dependencies": [
+              "2.1"
+            ],
+            "parentTaskId": 2
+          },
+          {
+            "id": 4,
+            "title": "Criar componente PageLayout para estrutura principal",
+            "description": "Desenvolver o componente PageLayout que organizará a estrutura principal da aplicação, combinando Header, Sidebar e área de conteúdo principal, garantindo layout responsivo e consistente.",
+            "details": "",
+            "status": "done",
+            "dependencies": [
+              "2.2",
+              "2.3"
+            ],
+            "parentTaskId": 2
+          },
+          {
+            "id": 5,
+            "title": "Refatorar layout principal (src/app/layout.tsx)",
+            "description": "Atualizar o arquivo layout.tsx principal para integrar o novo PageLayout, mantendo a configuração de fontes, metadata e Toaster, mas adicionando a nova estrutura de layout.",
+            "details": "",
+            "status": "done",
+            "dependencies": [
+              "2.4"
+            ],
+            "parentTaskId": 2
+          },
+          {
+            "id": 6,
+            "title": "Testar e ajustar responsividade do novo layout",
+            "description": "Testar o novo layout em diferentes tamanhos de tela, ajustar comportamentos responsivos da sidebar (colapsar/expandir), e garantir que a navegação funcione corretamente em dispositivos móveis.",
+            "details": "",
+            "status": "done",
+            "dependencies": [
+              "2.5"
+            ],
+            "parentTaskId": 2
+          }
+        ]
       },
       {
         "id": 3,
         "title": "Evolve and Extend Foundational UI Components (Shadcn/UI) for New Design System",
         "description": "Evolve and extend existing Shadcn/UI components to align with the new design system. This task focuses on improving the current UI foundation and adding necessary new components, rather than migrating to a different library.",
-        "status": "todo",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -573,7 +639,7 @@
         "id": 4,
         "title": "Refactor Existing Forms with React Hook Form and Zod",
         "description": "Refactor existing application forms to leverage React Hook Form and Zod more robustly, ensuring a consistent and improved user experience for form interactions. This task focuses on evolving current implementations rather than building from scratch.",
-        "status": "todo",
+        "status": "done",
         "dependencies": [
           1,
           3
@@ -587,7 +653,7 @@
         "id": 5,
         "title": "Integrate Existing JWT Authentication with New Design System",
         "description": "Integrate the existing JWT authentication system with the new design system and components. This task focuses on adapting the current authentication flow to the new UI, rather than building authentication from scratch.",
-        "status": "todo",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -704,7 +770,7 @@
         "description": "Migrate existing functional pages (home, login, collaborators) to align with the new design system, ensuring all functionalities are preserved and user experience is enhanced.",
         "details": "This task involves a comprehensive refactoring of existing application pages to fully adopt the new design system and its underlying components and layout. Specific focus areas include:\n\n1.  **Home Page (`src/app/page.tsx`):** Ensure all internal UI elements and components within the home page are refactored to utilize the new design system components (e.g., cards, buttons, typography) and correctly integrate with the `PageLayout` established in Task 2.\n2.  **Login Page:** Completely refactor the login form and all associated UI elements (input fields, buttons, error messages, links) to use the new design system components (from Task 3) and leverage the React Hook Form and Zod infrastructure (from Task 4) for robust validation and submission.\n3.  **Collaborators Pages:** Migrate both the collaborators list page and the collaborators form (create/edit) page:\n    *   **Collaborators List Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor the data table, filtering mechanisms, pagination controls, and action buttons (e.g., edit, delete) to exclusively use components from the new design system (Task 3).\n    *   **Collaborators Form Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor all form fields, submission buttons, and validation feedback displays to use the new design system components (Task 3) and integrate seamlessly with the React Hook Form and Zod setup (Task 4).\n4.  **Functionality Preservation:** Throughout the refactoring process, rigorously ensure that all existing functionalities (e.g., login authentication, data display, form submission, CRUD operations for collaborators) remain fully operational without regressions.\n5.  **User Experience Improvement:** Leverage the new design system's patterns and components to enhance the overall user experience, focusing on consistency, clarity, and responsiveness.",
         "testStrategy": "Perform thorough testing across all refactored pages:\n\n1.  **Visual Verification:** Conduct a comprehensive visual review of the home, login, and collaborators pages on various screen sizes (desktop, tablet, mobile) to ensure they accurately reflect the new design system's aesthetics and responsiveness. Verify correct alignment, spacing, typography, and component rendering.\n2.  **Functional Testing:**\n    *   **Home Page:** Verify all interactive elements (if any) function as expected and content loads correctly.\n    *   **Login Page:** Test successful login with valid credentials, verify error messages for invalid credentials, and ensure form validation works correctly (e.g., empty fields).\n    *   **Collaborators List Page:** Verify data loading, filtering, sorting (if applicable), pagination, and that all row actions (e.g., 'Edit', 'Delete', 'View') trigger the correct behavior. Test the 'Novo' (New) button navigation.\n    *   **Collaborators Form Page:** Test creation of new collaborators and editing of existing ones. Verify all form fields accept valid input, display correct validation errors for invalid input (using Zod rules), and that form submission works as expected (e.g., success message, redirection).\n3.  **Regression Testing:** Execute existing end-to-end tests (if any) or manually re-test critical user flows involving these pages to confirm no regressions were introduced.\n4.  **Accessibility Check:** Perform basic accessibility checks, including keyboard navigation, focus management, and screen reader compatibility for key interactive elements on all refactored pages.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           2,
           3,
@@ -716,7 +782,7 @@
     ],
     "metadata": {
       "created": "2025-08-28T21:21:53.353Z",
-      "updated": "2025-08-30T00:59:01.068Z",
+      "updated": "2025-08-30T02:00:15.370Z",
       "description": "Tasks for frontend-design context"
     }
   }

@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Evolve and Extend Foundational UI Components (Shadcn/UI) for New Design System
+# Status: todo
+# Dependencies: 1
+# Priority: high
+# Description: Evolve and extend existing Shadcn/UI components to align with the new design system. This task focuses on improving the current UI foundation and adding necessary new components, rather than migrating to a different library.
+# Details:
+Evolve and extend existing Shadcn/UI components located in `src/components/ui/` (e.g., `button`, `card`, `input`, etc.) to align with the new design system. This includes improving their consistency, accessibility, and extending their functionality where needed. Crucially, maintain backward compatibility and ensure existing features that use these components (e.g., `collaborators` related UI) continue to function correctly without regressions. Additionally, integrate new foundational components such as `Avatar`, `Switch`, and `DropdownMenu` (leveraging Shadcn/UI where available, or custom implementations adhering to Shadcn/UI patterns) into this system, ensuring they are accessible and customizable via props and adhere to the new design.
+
+# Test Strategy:
+Create a Storybook or a dedicated test page to display all improved, extended, and newly added component variants. Write unit tests for each component to verify that props are handled correctly, they render the expected output, and maintain their original functionality and accessibility after evolution. Perform comprehensive regression testing on existing pages and features that utilize these components (e.g., `collaborators` views) to ensure no breaking changes or visual regressions were introduced. Manually test for accessibility features like keyboard navigation and screen reader compatibility for all components. Verify that all components visually conform to the new design system specifications.

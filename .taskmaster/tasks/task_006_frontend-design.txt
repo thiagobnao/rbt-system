@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Enhance Feedback System (Sonner Toasts & Modals)
+# Status: todo
+# Dependencies: 1, 3
+# Priority: medium
+# Description: Enhance the existing feedback system by improving the configuration and usage of Sonner for toasts and refactoring existing modals (e.g., confirmation dialogs) to align with the new design system. Ensure continuity of existing feedback functionality while significantly improving the overall user experience and integration across the application.
+# Details:
+Improve the existing toast system by refining the configuration and usage of Sonner, ensuring consistent styling, better accessibility, and a more streamlined API for triggering success, error, and info toasts. Refactor existing modal dialogs, such as the `ConfirmationDialog` used for critical actions (e.g., delete confirmation), to align with the new design system and utilize a generic `Dialog` component based on `Radix.Dialog` with focus trapping. Ensure seamless integration of the enhanced feedback system across all relevant pages and components, verifying that existing feedback mechanisms continue to function correctly while delivering an improved user experience aligned with the new design.
+
+# Test Strategy:
+Verify the improved Sonner toast system functions correctly, displaying various toast types (success, error, info), stacking properly, and disappearing automatically, with enhanced styling and accessibility. Test refactored modal dialogs (e.g., `ConfirmationDialog`) to confirm they open/close correctly, trap focus, and are accessible via keyboard and overlay clicks, aligning with the new design system. Validate that existing components and pages that previously used these feedback mechanisms now correctly integrate and display feedback using the enhanced system without regressions, ensuring a consistent and improved user experience.

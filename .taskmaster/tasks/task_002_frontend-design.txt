@@ -1,0 +1,49 @@
+# Task ID: 2
+# Title: Refactor Existing Layout for New Design System (PageLayout, Header, Sidebar)
+# Status: todo
+# Dependencies: 1
+# Priority: high
+# Description: Refactor the existing application layout (`src/app/layout.tsx`) to implement the new design system, including a fixed sidebar and top header, and integrate it with existing pages.
+# Details:
+Refactor the existing `src/app/layout.tsx` to implement the new design system's `PageLayout` structure, incorporating a fixed `Sidebar` and `Header`. The `Sidebar` should support navigation items (icon + label), grouping, and collapsed/expanded states. The `Header` should include placeholders for a logo, breadcrumbs, notifications, user avatar, and theme toggle. Migrate the existing home page (`src/app/page.tsx`) to utilize this new layout. Implement responsive navigation, ensuring it functions correctly with existing pages like 'login' and 'collaborators'. Integrate the existing authentication system with the new layout, ensuring protected routes and user-specific elements in the header work as expected. Finally, verify that all existing pages (e.g., 'collaborators') render and function correctly within the refactored layout.
+
+# Test Strategy:
+Verify the refactored `PageLayout` correctly applies the new design system on large screens. Test that the existing home page (`src/app/page.tsx`) renders correctly within the new layout. Navigate to existing pages (e.g., 'login', 'collaborators') and confirm they display correctly and maintain their functionality within the new layout. Test the responsive behavior by resizing the viewport, ensuring the sidebar collapses to a hamburger menu and can be toggled. Verify the integration with the authentication system by checking protected routes and user information display in the header.
+
+# Subtasks:
+## 1. Analisar estrutura atual do layout e definir requisitos do novo design system [pending]
+### Dependencies: None
+### Description: Examinar o layout atual (src/app/layout.tsx) e definir os requisitos para o novo layout com sidebar fixa e header superior, considerando a estrutura de navegação e responsividade.
+### Details:
+
+
+## 2. Criar componente Header com navegação superior [pending]
+### Dependencies: 2.1
+### Description: Desenvolver o componente Header que será posicionado na parte superior da aplicação, incluindo logo, navegação principal e área para ações do usuário (perfil, logout, etc.).
+### Details:
+
+
+## 3. Criar componente Sidebar com navegação lateral [pending]
+### Dependencies: 2.1
+### Description: Desenvolver o componente Sidebar que será posicionado na lateral esquerda da aplicação, incluindo menu de navegação, ícones e suporte para navegação responsiva (colapsável em dispositivos móveis).
+### Details:
+
+
+## 4. Criar componente PageLayout para estrutura principal [pending]
+### Dependencies: 2.2, 2.3
+### Description: Desenvolver o componente PageLayout que organizará a estrutura principal da aplicação, combinando Header, Sidebar e área de conteúdo principal, garantindo layout responsivo e consistente.
+### Details:
+
+
+## 5. Refatorar layout principal (src/app/layout.tsx) [pending]
+### Dependencies: 2.4
+### Description: Atualizar o arquivo layout.tsx principal para integrar o novo PageLayout, mantendo a configuração de fontes, metadata e Toaster, mas adicionando a nova estrutura de layout.
+### Details:
+
+
+## 6. Testar e ajustar responsividade do novo layout [pending]
+### Dependencies: 2.5
+### Description: Testar o novo layout em diferentes tamanhos de tela, ajustar comportamentos responsivos da sidebar (colapsar/expandir), e garantir que a navegação funcione corretamente em dispositivos móveis.
+### Details:
+
+

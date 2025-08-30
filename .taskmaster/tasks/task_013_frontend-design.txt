@@ -1,0 +1,28 @@
+# Task ID: 13
+# Title: Refactor Existing Pages to New Design System
+# Status: done
+# Dependencies: 2, 3, 4
+# Priority: high
+# Description: Migrate existing functional pages (home, login, collaborators) to align with the new design system, ensuring all functionalities are preserved and user experience is enhanced.
+# Details:
+This task involves a comprehensive refactoring of existing application pages to fully adopt the new design system and its underlying components and layout. Specific focus areas include:
+
+1.  **Home Page (`src/app/page.tsx`):** Ensure all internal UI elements and components within the home page are refactored to utilize the new design system components (e.g., cards, buttons, typography) and correctly integrate with the `PageLayout` established in Task 2.
+2.  **Login Page:** Completely refactor the login form and all associated UI elements (input fields, buttons, error messages, links) to use the new design system components (from Task 3) and leverage the React Hook Form and Zod infrastructure (from Task 4) for robust validation and submission.
+3.  **Collaborators Pages:** Migrate both the collaborators list page and the collaborators form (create/edit) page:
+    *   **Collaborators List Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor the data table, filtering mechanisms, pagination controls, and action buttons (e.g., edit, delete) to exclusively use components from the new design system (Task 3).
+    *   **Collaborators Form Page:** Adapt the page to use the new `PageLayout` (Task 2). Refactor all form fields, submission buttons, and validation feedback displays to use the new design system components (Task 3) and integrate seamlessly with the React Hook Form and Zod setup (Task 4).
+4.  **Functionality Preservation:** Throughout the refactoring process, rigorously ensure that all existing functionalities (e.g., login authentication, data display, form submission, CRUD operations for collaborators) remain fully operational without regressions.
+5.  **User Experience Improvement:** Leverage the new design system's patterns and components to enhance the overall user experience, focusing on consistency, clarity, and responsiveness.
+
+# Test Strategy:
+Perform thorough testing across all refactored pages:
+
+1.  **Visual Verification:** Conduct a comprehensive visual review of the home, login, and collaborators pages on various screen sizes (desktop, tablet, mobile) to ensure they accurately reflect the new design system's aesthetics and responsiveness. Verify correct alignment, spacing, typography, and component rendering.
+2.  **Functional Testing:**
+    *   **Home Page:** Verify all interactive elements (if any) function as expected and content loads correctly.
+    *   **Login Page:** Test successful login with valid credentials, verify error messages for invalid credentials, and ensure form validation works correctly (e.g., empty fields).
+    *   **Collaborators List Page:** Verify data loading, filtering, sorting (if applicable), pagination, and that all row actions (e.g., 'Edit', 'Delete', 'View') trigger the correct behavior. Test the 'Novo' (New) button navigation.
+    *   **Collaborators Form Page:** Test creation of new collaborators and editing of existing ones. Verify all form fields accept valid input, display correct validation errors for invalid input (using Zod rules), and that form submission works as expected (e.g., success message, redirection).
+3.  **Regression Testing:** Execute existing end-to-end tests (if any) or manually re-test critical user flows involving these pages to confirm no regressions were introduced.
+4.  **Accessibility Check:** Perform basic accessibility checks, including keyboard navigation, focus management, and screen reader compatibility for key interactive elements on all refactored pages.

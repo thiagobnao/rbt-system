@@ -11,6 +11,8 @@ import { CollaboratorList } from '@/components/collaborators/CollaboratorList';
 import { collaboratorService } from '@/lib/services/collaboratorService';
 import { Collaborator, CollaboratorFilters } from '@/lib/types/collaborator';
 import { toast } from 'sonner';
+import { PageLayout } from '@/components/layout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function CollaboratorsPage() {
   const router = useRouter();
@@ -70,68 +72,85 @@ export default function CollaboratorsPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Colaboradores</h1>
-          <p className="text-muted-foreground">
-            Gerencie os colaboradores do sistema
-          </p>
-        </div>
-        <Button onClick={() => router.push('/collaborators/new')}>
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Colaborador
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filtros
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Buscar por nome, CPF ou email..."
-                value={filters.search || ''}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="pl-10"
-              />
+    <ProtectedRoute>
+      <PageLayout>
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Colaboradores</h1>
+              <p className="text-muted-foreground">
+                Gerencie os colaboradores do sistema
+              </p>
             </div>
-            <Select
-              value={filters.status || 'all'}
-              onValueChange={handleStatusFilter}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os status</SelectItem>
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="inactive">Inativo</SelectItem>
-                <SelectItem value="suspended">Suspenso</SelectItem>
-              </SelectContent>
-            </Select>
+            <Button onClick={() => router.push('/collaborators/new')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Colaborador
+            </Button>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Collaborators List */}
-      <CollaboratorList
-        collaborators={collaborators}
-        loading={loading}
-        onDelete={handleDelete}
-        currentPage={filters.page || 1}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        total={total}
-      />
-    </div>
+          {/* Filters */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Filter className="h-5 w-5" />
+                Filtros
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar colaboradores..."
+                    value={filters.search || ''}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Select
+                  value={filters.status || 'all'}
+                  onValueChange={handleStatusFilter}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="active">Ativo</SelectItem>
+                    <SelectItem value="inactive">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">
+                    {total} colaboradores encontrados
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Collaborators List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Lista de Colaboradores</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CollaboratorList
+                collaborators={collaborators}
+                loading={loading}
+                onDelete={handleDelete}
+                onEdit={(id: string) => router.push(`/collaborators/${id}/edit`)}
+                onView={(id: string) => router.push(`/collaborators/${id}`)}
+                currentPage={filters.page || 1}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                total={total}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </PageLayout>
+    </ProtectedRoute>
   );
 }

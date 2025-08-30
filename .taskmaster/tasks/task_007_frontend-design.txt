@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: Refactor Data Display Components (Tables, Pagination, Breadcrumbs)
+# Status: todo
+# Dependencies: 3
+# Priority: medium
+# Description: Refactor existing data display components, including tables and pagination, to align with the new design system, and integrate new breadcrumbs for improved navigation.
+# Details:
+Refactor existing data tables (e.g., the `collaborators` table) to align with the new design system, ensuring they accept `columns` and `rows` as props, support custom cell rendering, and integrate an actions column using the `DropdownMenu` from Task 3. Implement loading (skeleton) and empty states for these refactored tables. Migrate existing pagination components to conform to the new design system. Crucially, ensure that existing data listings, particularly the `collaborators` list, continue to function correctly and without regressions after these refactorings. Improve the overall navigation and filtering experience for data listings. Additionally, implement a new `Breadcrumbs` component to provide enhanced navigation trails.
+
+# Test Strategy:
+Thoroughly test the refactored data tables (e.g., `collaborators` table) with existing and mock data, verifying all columns and rows are displayed correctly and existing functionalities are preserved. Test the loading and empty states for these tables. Verify the migrated `Pagination` component functions correctly by simulating page changes. Test the new `Breadcrumbs` component to ensure it renders navigation links accurately and integrates seamlessly with existing routes. Verify improved filtering and navigation capabilities for data listings.

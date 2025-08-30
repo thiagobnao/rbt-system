@@ -5,6 +5,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Cores
 
 ### Cores Base
+
 - `bg-background` / `text-foreground` - Cor de fundo e texto principal
 - `bg-card` / `text-card-foreground` - Cores para cards
 - `bg-popover` / `text-popover-foreground` - Cores para popovers
@@ -12,16 +13,19 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 - `border-border` - Cor das bordas
 
 ### Cores Primárias
+
 - `bg-primary` / `text-primary-foreground` - Cor primária principal
 - `bg-primary-50` até `bg-primary-950` - Escala completa de cores primárias
 - `text-primary-50` até `text-primary-950` - Texto nas cores primárias
 
 ### Cores Secundárias
+
 - `bg-secondary` / `text-secondary-foreground` - Cor secundária principal
 - `bg-secondary-50` até `bg-secondary-950` - Escala completa de cores secundárias
 - `text-secondary-50` até `text-secondary-950` - Texto nas cores secundárias
 
 ### Cores Semânticas
+
 - `bg-destructive` / `text-destructive-foreground` - Para ações destrutivas
 - `bg-success` / `text-success-foreground` - Para sucessos
 - `bg-warning` / `text-warning-foreground` - Para avisos
@@ -30,6 +34,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Tipografia
 
 ### Famílias de Fontes
+
 - `font-sans` - Fonte sans-serif padrão (Inter)
 - `font-serif` - Fonte serif (Georgia)
 - `font-mono` - Fonte monospace (JetBrains Mono)
@@ -37,6 +42,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 - `font-body` - Fonte para corpo de texto (Inter)
 
 ### Tamanhos de Fonte
+
 - `text-xs` - 0.75rem (12px)
 - `text-sm` - 0.875rem (14px)
 - `text-base` - 1rem (16px)
@@ -51,6 +57,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Espaçamento
 
 ### Espaçamento Customizado
+
 - `p-xs` / `m-xs` - 0.25rem (4px)
 - `p-sm` / `m-sm` - 0.5rem (8px)
 - `p-md` / `m-md` - 1rem (16px)
@@ -64,6 +71,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Bordas
 
 ### Border Radius
+
 - `rounded-xs` - Muito pequeno
 - `rounded-sm` - Pequeno
 - `rounded-md` - Médio
@@ -73,6 +81,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Sombras
 
 ### Box Shadows
+
 - `shadow-xs` - Sombra muito sutil
 - `shadow-sm` - Sombra pequena
 - `shadow-md` - Sombra média
@@ -85,6 +94,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Animações
 
 ### Animações Disponíveis
+
 - `animate-fade-in` - Fade in
 - `animate-fade-out` - Fade out
 - `animate-slide-in-from-top` - Slide do topo
@@ -99,6 +109,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Z-Index
 
 ### Camadas de Z-Index
+
 - `z-dropdown` - Dropdowns (1000)
 - `z-sticky` - Elementos sticky (1020)
 - `z-banner` - Banners (1030)
@@ -110,6 +121,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ## Exemplos de Uso
 
 ### Botão Primário
+
 ```html
 <button class="bg-primary text-primary-foreground px-md py-sm rounded-md shadow-sm hover:shadow-md transition-shadow">
   Botão Primário
@@ -117,6 +129,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ```
 
 ### Card com Sombra
+
 ```html
 <div class="bg-card text-card-foreground p-lg rounded-lg shadow-md">
   <h3 class="text-xl font-display mb-md">Título do Card</h3>
@@ -125,6 +138,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ```
 
 ### Texto com Tipografia
+
 ```html
 <h1 class="text-4xl font-display text-foreground">Título Principal</h1>
 <h2 class="text-2xl font-body text-foreground">Subtítulo</h2>
@@ -132,6 +146,7 @@ Este documento descreve o sistema de design implementado no projeto RBT System, 
 ```
 
 ### Container com Espaçamento
+
 ```html
 <div class="bg-background p-xl">
   <div class="max-w-4xl mx-auto space-y-lg">

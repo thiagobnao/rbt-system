@@ -367,14 +367,14 @@ export function CollaboratorForm({ mode, collaboratorId }: CollaboratorFormProps
               <div className="space-y-2">
                 <Label htmlFor="address_state">Estado</Label>
                 <Select
-                  value={watch('address_state') || ''}
-                  onValueChange={(value) => setValue('address_state', value as any)}
+                  value={watch('address_state') || 'placeholder'}
+                  onValueChange={(value) => setValue('address_state', value === 'placeholder' ? '' : value as any)}
                 >
                   <SelectTrigger className={cn(errors.address_state && 'border-red-500')}>
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Selecione</SelectItem>
+                    <SelectItem value="placeholder">Selecione</SelectItem>
                     <SelectItem value="AC">Acre</SelectItem>
                     <SelectItem value="AL">Alagoas</SelectItem>
                     <SelectItem value="AP">Amapá</SelectItem>
@@ -474,14 +474,14 @@ export function CollaboratorForm({ mode, collaboratorId }: CollaboratorFormProps
               <div className="space-y-2">
                 <Label htmlFor="bank_account_type">Tipo de Conta</Label>
                 <Select
-                  value={watch('bank_account_type') || ''}
-                  onValueChange={(value) => setValue('bank_account_type', value as any)}
+                  value={watch('bank_account_type') || 'placeholder'}
+                  onValueChange={(value) => setValue('bank_account_type', value === 'placeholder' ? '' : value as any)}
                 >
                   <SelectTrigger className={cn(errors.bank_account_type && 'border-red-500')}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Selecione</SelectItem>
+                    <SelectItem value="placeholder">Selecione</SelectItem>
                     <SelectItem value="corrente">Corrente</SelectItem>
                     <SelectItem value="poupanca">Poupança</SelectItem>
                   </SelectContent>
@@ -506,14 +506,14 @@ export function CollaboratorForm({ mode, collaboratorId }: CollaboratorFormProps
               <div className="space-y-2">
                 <Label htmlFor="pix_key_type">Tipo da Chave PIX</Label>
                 <Select
-                  value={watch('pix_key_type') || ''}
-                  onValueChange={(value) => setValue('pix_key_type', value as any)}
+                  value={watch('pix_key_type') || 'placeholder'}
+                  onValueChange={(value) => setValue('pix_key_type', value === 'placeholder' ? '' : value as any)}
                 >
                   <SelectTrigger className={cn(errors.pix_key_type && 'border-red-500')}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Selecione</SelectItem>
+                    <SelectItem value="placeholder">Selecione</SelectItem>
                     <SelectItem value="cpf">CPF</SelectItem>
                     <SelectItem value="email">E-mail</SelectItem>
                     <SelectItem value="phone">Telefone</SelectItem>

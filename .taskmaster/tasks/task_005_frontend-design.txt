@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Integrate Existing JWT Authentication with New Design System
+# Status: todo
+# Dependencies: 1
+# Priority: high
+# Description: Integrate the existing JWT authentication system with the new design system and components. This task focuses on adapting the current authentication flow to the new UI, rather than building authentication from scratch.
+# Details:
+Adapt the existing JWT authentication system to seamlessly integrate with the new layout and components. Create or update a `useAuth` hook that effectively manages user authentication state (user object, loading, isAuthenticated) by interacting with the existing JWT-based backend API. Ensure the `Header` and `Sidebar` components correctly display user-specific information (e.g., username, profile picture) based on the authenticated state. Implement or adapt protected route logic to work with the new layout structure, ensuring unauthenticated users are redirected appropriately. Enhance the login and logout user experience by applying the new design system's components and styling to the authentication forms and flows.
+
+# Test Strategy:
+Write integration tests for the `useAuth` hook to verify state transitions (login, logout, session check) when interacting with the existing JWT API endpoints. Test the protected route components to ensure correct redirection based on authentication status within the new layout. Perform visual and functional testing of the login and logout forms/flows to ensure they align with the new design system and provide a smooth user experience. Verify that user information is correctly displayed in the Header and Sidebar upon successful authentication.

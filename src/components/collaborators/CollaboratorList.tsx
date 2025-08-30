@@ -37,6 +37,8 @@ interface CollaboratorListProps {
   collaborators: Collaborator[];
   loading: boolean;
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
+  onView: (id: string) => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -47,6 +49,8 @@ export function CollaboratorList({
   collaborators,
   loading,
   onDelete,
+  onEdit,
+  onView,
   currentPage,
   totalPages,
   onPageChange,
@@ -192,6 +196,14 @@ export function CollaboratorList({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => onView(collaborator.id)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          Visualizar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onEdit(collaborator.id)}>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Editar
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => onDelete(collaborator.id)}>
                           <Trash2 className="mr-2 h-4 w-4" />
                           Excluir
